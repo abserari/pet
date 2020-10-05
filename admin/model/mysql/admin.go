@@ -1,6 +1,6 @@
 /*
  * Revision History:
- *     Initial: 2019/03/14        Yang ChengKai
+ *     Initial: 2020/10/05        Abserari
  */
 
 package mysql
@@ -9,7 +9,7 @@ import (
 	"database/sql"
 	"errors"
 
-	"github.com/abserari/pet/pkgs/salt"
+	"github.com/abserari/pet/util/salt"
 )
 
 const (

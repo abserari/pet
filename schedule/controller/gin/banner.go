@@ -1,6 +1,6 @@
 /*
  * Revision History:
- *     Initial: 2019/03/18        Yang ChengKai
+ *     Initial: 2020/1018       Abserari
  */
 
 package controller
@@ -11,7 +11,7 @@ import (
 	"net/http"
 	"time"
 
-	mysql "github.com/abserari/pet/banner/model/mysql"
+	mysql "github.com/abserari/pet/schedule/model/mysql"
 	"github.com/gin-gonic/gin"
 )
 

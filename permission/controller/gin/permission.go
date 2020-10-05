@@ -1,6 +1,6 @@
 /*
  * Revision History:
- *     Initial: 2019/03/14        Yang ChengKai
+ *     Initial: 2020/10/05        Abserari
  */
 
 package controller
@@ -33,17 +33,20 @@ func (c *Controller) RegisterRouter(r gin.IRouter) {
 		log.Fatal(err)
 	}
 
+	// role table
 	r.POST("/addrole", c.createRole)
 	r.POST("/modifyrole", c.modifyRole)
 	r.POST("/activerole", c.modifyRoleActive)
 	r.POST("/getallrole", c.roleList)
 	r.POST("/idgetrole", c.getRoleByID)
 
+	// role2url table
 	r.POST("/addurl", c.addURLPermission)
 	r.POST("/removeurl", c.removeURLPermission)
 	r.POST("/urlgetrole", c.urlPermissions)
 	r.POST("/geturl", c.permissions)
 
+	// admin2role table
 	r.POST("/addrelation", c.addRelation)
 	r.POST("/removerelation", c.removeRelation)
 	r.POST("/admingetrole", c.adminGetRoleMap)
