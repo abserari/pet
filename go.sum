@@ -2,8 +2,8 @@ github.com/appleboy/gin-jwt v2.5.0+incompatible/go.mod h1:pG7tv32IEe5wEh1NSQzcyD
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/dgrijalva/jwt-go v3.2.0+incompatible/go.mod h1:E3ru+11k8xSBh+hMPgOLZmtrrCbhqsmaPHjLKYnJCaQ=
-github.com/fengyfei/comet v0.0.0-20200105081839-ed9e5cc45741 h1:VWG/njSLE2DZoC9aysFrs97c2f7qcU4Ji0F9r3s72ck=
-github.com/fengyfei/comet v0.0.0-20200105081839-ed9e5cc45741/go.mod h1:QXIosA0LLIW4SAi48w8PXKvNNk1HwHGDBc3AJBgt4Zw=
+github.com/abserari/pet v0.0.0-20200105081839-ed9e5cc45741 h1:VWG/njSLE2DZoC9aysFrs97c2f7qcU4Ji0F9r3s72ck=
+github.com/abserari/pet v0.0.0-20200105081839-ed9e5cc45741/go.mod h1:QXIosA0LLIW4SAi48w8PXKvNNk1HwHGDBc3AJBgt4Zw=
 github.com/gin-contrib/sse v0.0.0-20190301062529-5545eab6dad3/go.mod h1:VJ0WA2NBN22VlZ2dKZQPAPnyWw5XTlK1KymzLKsr59s=
 github.com/gin-contrib/sse v0.1.0 h1:Y/yl/+YNO8GZSjAhjMsSuLt29uWRFHdHYUb5lYOV9qE=
 github.com/gin-contrib/sse v0.1.0/go.mod h1:RHrZQHXnP2xjPF+u1gW/2HnVO7nvIa9PG3Gm+fLHvGI=
