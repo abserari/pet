@@ -2,20 +2,14 @@ package main
 
 import (
 	"database/sql"
-
 	admin "github.com/abserari/pet/admin/controller"
 	permission "github.com/abserari/pet/permission/controller/gin"
 	smservice "github.com/abserari/pet/smservice/controller/gin"
 	service "github.com/abserari/pet/smservice/service"
 	upload "github.com/abserari/pet/upload/controller/gin"
-	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
-)
-
-var (
-	// JWTMiddleware should be exported for user authentication.
-	JWTMiddleware *jwt.GinJWTMiddleware
+	"log"
 )
 
 type funcv struct{}
@@ -48,12 +42,11 @@ func main() {
 	adminCon := admin.New(dbConn)
 	adminCon.RegisterRouter(router.Group("/api/v1/admin"))
 
-	permissionCon := permission.New(dbConn)
-	router.Use(permission.CheckPermission(permissionCon, adminCon.GetID))
+	permissionCon := permission.New(dbConn,adminCon.GetID)
 	permissionCon.RegisterRouter(router.Group("/api/v1/permission"))
 
 	uploadCon := upload.New(dbConn, "http://0.0.0.1:9573", adminCon.GetID)
 	uploadCon.RegisterRouter(router.Group("/api/v1/user"))
 
-	router.Run(":8000")
+	log.Fatal(router.Run(":8000"))
 }

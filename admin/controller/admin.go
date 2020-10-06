@@ -111,8 +111,8 @@ func (c *Controller) checkActive() func(ctx *gin.Context) {
 
 func (con *Controller) newJWTMiddleware() (*jwt.GinJWTMiddleware, error) {
 	return jwt.New(&jwt.GinJWTMiddleware{
-		Realm:       "testpet",
-		Key:         []byte("moli"),
+		Realm:       "test-pet",
+		Key:         []byte("moli-tech-cats-member"),
 		Timeout:     time.Hour,
 		MaxRefresh:  time.Hour,
 		IdentityKey: "id",

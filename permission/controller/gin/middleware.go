@@ -20,12 +20,12 @@ var (
 )
 
 //CheckPermission middleware that checks the permission
-func CheckPermission(c *Controller, getUID func(ctx *gin.Context) (uint32, error)) func(c *gin.Context) {
+func (c *Controller)CheckPermission() func(c *gin.Context) {
 	return func(ctx *gin.Context) {
 		var check = true
 		URLL := ctx.Request.URL.Path
 
-		adminID, err := getUID(ctx)
+		adminID, err := c.getIDFunc(ctx)
 		if err != nil {
 			ctx.AbortWithError(http.StatusBadGateway, err)
 			return

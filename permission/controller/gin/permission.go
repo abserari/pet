@@ -17,21 +17,29 @@ import (
 // Controller external service interface
 type Controller struct {
 	db *sql.DB
+	getIDFunc func(c *gin.Context)(uint32, error)
 }
 
 // New create an external service interface
-func New(db *sql.DB) *Controller {
+func New(db *sql.DB, getID func(c *gin.Context)(uint32, error)) *Controller {
 	return &Controller{
 		db: db,
+		getIDFunc: getID,
 	}
 }
 
-//RegisterRouter register router
+//RegisterRouter register router and from now on, every API would check if valid on current AdminID.
+// Should init the permission to the API.
 func (c *Controller) RegisterRouter(r gin.IRouter) {
 	err := mysql.CreateTable(c.db)
 	if err != nil {
 		log.Fatal(err)
 	}
+	// init with user defined API.
+
+
+	// from now on, every API would check if valid on current AdminID.
+	r.Use(c.CheckPermission())
 
 	// role table
 	r.POST("/addrole", c.createRole)

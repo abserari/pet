@@ -20,30 +20,26 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ba2af1fb-2f88-484b-8b0c-fa9f7143b0d6" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/admin/controller/admin.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/pet.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/pet.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/util/sms/example/example.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/controller/gin/admin.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/controller/gin/middleware.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/model/mysql/admin.go" beforeDir="false" afterPath="$PROJECT_DIR$/admin/model/mysql/admin.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/controller/admin.go" beforeDir="false" afterPath="$PROJECT_DIR$/admin/controller/admin.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/permission/controller/gin/middleware.go" beforeDir="false" afterPath="$PROJECT_DIR$/permission/controller/gin/middleware.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/permission/controller/gin/permission.go" beforeDir="false" afterPath="$PROJECT_DIR$/permission/controller/gin/permission.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/permission/model/mysql/permission.go" beforeDir="false" afterPath="$PROJECT_DIR$/permission/model/mysql/permission.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schedule/controller/gin/banner.go" beforeDir="false" afterPath="$PROJECT_DIR$/schedule/controller/gin/banner.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schedule/model/mysql/banner.go" beforeDir="false" afterPath="$PROJECT_DIR$/schedule/model/mysql/banner.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/smservice/controller/gin/smservice.go" beforeDir="false" afterPath="$PROJECT_DIR$/smservice/controller/gin/smservice.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/smservice/model/mysql/smservice.go" beforeDir="false" afterPath="$PROJECT_DIR$/smservice/model/mysql/smservice.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/smservice/service/service.go" beforeDir="false" afterPath="$PROJECT_DIR$/smservice/service/service.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/upload/controller/gin/upload.go" beforeDir="false" afterPath="$PROJECT_DIR$/upload/controller/gin/upload.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/upload/model/mysql/upload.go" beforeDir="false" afterPath="$PROJECT_DIR$/upload/model/mysql/upload.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Go File" />
+      </list>
+    </option>
   </component>
   <component name="GOROOT" path="D:\Go" />
   <component name="Git.Settings">
@@ -56,11 +52,15 @@
     <option name="indexEntireGoPath" value="false" />
   </component>
   <component name="ProjectId" id="1iSiv876j2uydd6PWdW4xwrrbyr" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="DefaultGoTemplateProperty" value="Go File" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="go.import.settings.migrated" value="true" />
@@ -68,6 +68,27 @@
     <property name="go.tried.to.enable.integration.vgo.integrator" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\gopath\src\github.com\abserari\pet\util\sms\example" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="go build github.com/abserari/pet/util/sms/example" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="pet" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <filePath value="$PROJECT_DIR$/util/sms/example/example.go" />
+      <package value="github.com/abserari/pet/util/sms/example" />
+      <directory value="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Go Build.go build github.com/abserari/pet/util/sms/example" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TypeScriptGeneratedFilesManager">
@@ -93,6 +114,22 @@
       <screen x="1982" y="0" width="1474" height="864" />
     </state>
     <state x="2512" y="265" key="#Go_Modules/87.0.1833.1080/1982.0.1474.864@1982.0.1474.864" timestamp="1601907673596" />
+    <state width="1431" height="224" key="GridCell.Tab.0.bottom" timestamp="1601978617796">
+      <screen x="1982" y="0" width="1474" height="864" />
+    </state>
+    <state width="1431" height="224" key="GridCell.Tab.0.bottom/87.0.1833.1080/1982.0.1474.864@1982.0.1474.864" timestamp="1601978617796" />
+    <state width="1431" height="224" key="GridCell.Tab.0.center" timestamp="1601978617796">
+      <screen x="1982" y="0" width="1474" height="864" />
+    </state>
+    <state width="1431" height="224" key="GridCell.Tab.0.center/87.0.1833.1080/1982.0.1474.864@1982.0.1474.864" timestamp="1601978617796" />
+    <state width="1431" height="224" key="GridCell.Tab.0.left" timestamp="1601978617796">
+      <screen x="1982" y="0" width="1474" height="864" />
+    </state>
+    <state width="1431" height="224" key="GridCell.Tab.0.left/87.0.1833.1080/1982.0.1474.864@1982.0.1474.864" timestamp="1601978617796" />
+    <state width="1431" height="224" key="GridCell.Tab.0.right" timestamp="1601978617796">
+      <screen x="1982" y="0" width="1474" height="864" />
+    </state>
+    <state width="1431" height="224" key="GridCell.Tab.0.right/87.0.1833.1080/1982.0.1474.864@1982.0.1474.864" timestamp="1601978617796" />
     <state x="2221" y="76" key="SettingsEditor" timestamp="1601907963824">
       <screen x="1982" y="0" width="1474" height="864" />
     </state>
