@@ -21,10 +21,8 @@ func main() {
 	var v funcv
 
 	router := gin.Default()
-	router.Use(gin.Logger())
-	router.Use(gin.Recovery())
 
-	dbConn, err := sql.Open("mysql", "root:123456@tcp(127.0.0.1:3306)/test")
+	dbConn, err := sql.Open("mysql", "root:123456@tcp(192.168.0.253:3307)/test")
 	if err != nil {
 		panic(err)
 	}
@@ -41,8 +39,12 @@ func main() {
 
 	adminCon := admin.New(dbConn)
 	adminCon.RegisterRouter(router.Group("/api/v1/admin"))
+	// start to add token on every API after admin.RegisterRouter
+	router.Use(adminCon.JWT.MiddlewareFunc())
+	// start to check the user active every time.
+	router.Use(adminCon.CheckActive())
 
-	permissionCon := permission.New(dbConn,adminCon.GetID)
+	permissionCon := permission.New(dbConn, adminCon.GetID)
 	permissionCon.RegisterRouter(router.Group("/api/v1/permission"))
 
 	uploadCon := upload.New(dbConn, "http://0.0.0.1:9573", adminCon.GetID)

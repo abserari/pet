@@ -14,19 +14,30 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+var (
+	admin = "admin"
+	intro = "use for test. Have any permission to API"
+)
+
 // Controller external service interface
 type Controller struct {
-	db *sql.DB
-	getIDFunc func(c *gin.Context)(uint32, error)
+	db        *sql.DB
+	getIDFunc func(c *gin.Context) (uint32, error)
 }
 
 // New create an external service interface
-func New(db *sql.DB, getID func(c *gin.Context)(uint32, error)) *Controller {
+func New(db *sql.DB, getID func(c *gin.Context) (uint32, error)) *Controller {
 	return &Controller{
-		db: db,
+		db:        db,
 		getIDFunc: getID,
 	}
 }
+
+// todo: add configuration on user-defined API
+func (c *Controller)InitWithUserAPI(){
+	c.initWithRole()
+}
+func (c *Controller)initWithRole() {}
 
 //RegisterRouter register router and from now on, every API would check if valid on current AdminID.
 // Should init the permission to the API.
@@ -36,7 +47,7 @@ func (c *Controller) RegisterRouter(r gin.IRouter) {
 		log.Fatal(err)
 	}
 	// init with user defined API.
-
+	c.InitWithUserAPI()
 
 	// from now on, every API would check if valid on current AdminID.
 	r.Use(c.CheckPermission())

@@ -20,14 +20,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ba2af1fb-2f88-484b-8b0c-fa9f7143b0d6" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/util/sms/example/example.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/admin/controller/middleware.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/admin/controller/admin.go" beforeDir="false" afterPath="$PROJECT_DIR$/admin/controller/admin.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/model/mysql/admin.go" beforeDir="false" afterPath="$PROJECT_DIR$/admin/model/mysql/admin.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/permission/controller/gin/middleware.go" beforeDir="false" afterPath="$PROJECT_DIR$/permission/controller/gin/middleware.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/permission/controller/gin/permission.go" beforeDir="false" afterPath="$PROJECT_DIR$/permission/controller/gin/permission.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/permission/model/mysql/permission.go" beforeDir="false" afterPath="$PROJECT_DIR$/permission/model/mysql/permission.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/util/sms/example/example.go" beforeDir="false" afterPath="$PROJECT_DIR$/util/sms/example/example.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,6 +61,7 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="DatabaseDriversLRU" value="mysql" />
     <property name="DefaultGoTemplateProperty" value="Go File" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
@@ -74,7 +76,16 @@
       <recent name="D:\gopath\src\github.com\abserari\pet\util\sms\example" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Go Build.go build github.com/abserari/pet/main">
+    <configuration name="go build github.com/abserari/pet/main" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="pet" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <filePath value="$PROJECT_DIR$/main/main.go" />
+      <package value="github.com/abserari/pet/main" />
+      <directory value="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
     <configuration name="go build github.com/abserari/pet/util/sms/example" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="pet" />
       <working_directory value="$PROJECT_DIR$" />
@@ -86,6 +97,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Go Build.go build github.com/abserari/pet/main" />
         <item itemvalue="Go Build.go build github.com/abserari/pet/util/sms/example" />
       </list>
     </recent_temporary>
@@ -114,25 +126,33 @@
       <screen x="1982" y="0" width="1474" height="864" />
     </state>
     <state x="2512" y="265" key="#Go_Modules/87.0.1833.1080/1982.0.1474.864@1982.0.1474.864" timestamp="1601907673596" />
-    <state width="1431" height="224" key="GridCell.Tab.0.bottom" timestamp="1601978617796">
+    <state x="2312" y="90" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1602084539865">
       <screen x="1982" y="0" width="1474" height="864" />
     </state>
-    <state width="1431" height="224" key="GridCell.Tab.0.bottom/87.0.1833.1080/1982.0.1474.864@1982.0.1474.864" timestamp="1601978617796" />
-    <state width="1431" height="224" key="GridCell.Tab.0.center" timestamp="1601978617796">
+    <state x="2312" y="90" key="#com.intellij.execution.impl.EditConfigurationsDialog/87.0.1833.1080/1982.0.1474.864@1982.0.1474.864" timestamp="1602084539865" />
+    <state width="1431" height="224" key="GridCell.Tab.0.bottom" timestamp="1602140968767">
       <screen x="1982" y="0" width="1474" height="864" />
     </state>
-    <state width="1431" height="224" key="GridCell.Tab.0.center/87.0.1833.1080/1982.0.1474.864@1982.0.1474.864" timestamp="1601978617796" />
-    <state width="1431" height="224" key="GridCell.Tab.0.left" timestamp="1601978617796">
+    <state width="1431" height="224" key="GridCell.Tab.0.bottom/87.0.1833.1080/1982.0.1474.864@1982.0.1474.864" timestamp="1602140968767" />
+    <state width="1431" height="224" key="GridCell.Tab.0.center" timestamp="1602140968767">
       <screen x="1982" y="0" width="1474" height="864" />
     </state>
-    <state width="1431" height="224" key="GridCell.Tab.0.left/87.0.1833.1080/1982.0.1474.864@1982.0.1474.864" timestamp="1601978617796" />
-    <state width="1431" height="224" key="GridCell.Tab.0.right" timestamp="1601978617796">
+    <state width="1431" height="224" key="GridCell.Tab.0.center/87.0.1833.1080/1982.0.1474.864@1982.0.1474.864" timestamp="1602140968767" />
+    <state width="1431" height="224" key="GridCell.Tab.0.left" timestamp="1602140968767">
       <screen x="1982" y="0" width="1474" height="864" />
     </state>
-    <state width="1431" height="224" key="GridCell.Tab.0.right/87.0.1833.1080/1982.0.1474.864@1982.0.1474.864" timestamp="1601978617796" />
+    <state width="1431" height="224" key="GridCell.Tab.0.left/87.0.1833.1080/1982.0.1474.864@1982.0.1474.864" timestamp="1602140968767" />
+    <state width="1431" height="224" key="GridCell.Tab.0.right" timestamp="1602140968767">
+      <screen x="1982" y="0" width="1474" height="864" />
+    </state>
+    <state width="1431" height="224" key="GridCell.Tab.0.right/87.0.1833.1080/1982.0.1474.864@1982.0.1474.864" timestamp="1602140968767" />
     <state x="2221" y="76" key="SettingsEditor" timestamp="1601907963824">
       <screen x="1982" y="0" width="1474" height="864" />
     </state>
     <state x="2221" y="76" key="SettingsEditor/87.0.1833.1080/1982.0.1474.864@1982.0.1474.864" timestamp="1601907963824" />
+    <state x="2419" y="164" width="600" height="536" key="find.popup" timestamp="1602085456320">
+      <screen x="1982" y="0" width="1474" height="864" />
+    </state>
+    <state x="2419" y="164" width="600" height="536" key="find.popup/87.0.1833.1080/1982.0.1474.864@1982.0.1474.864" timestamp="1602085456320" />
   </component>
 </project>

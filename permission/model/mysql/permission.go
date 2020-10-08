@@ -9,8 +9,6 @@ import (
 	"database/sql"
 	"errors"
 	"time"
-
-	mysql "github.com/abserari/pet/admin/model/mysql"
 )
 
 type (
@@ -64,7 +62,6 @@ const (
 
 var (
 	errInvalidMysql  = errors.New("affected 0 rows")
-	errAdminInactive = errors.New("the admin is not activated")
 	errRoleInactive  = errors.New("the role is not activated")
 
 	roleSQLString = []string{
@@ -292,15 +289,6 @@ func Permissions(db *sql.DB) (*[]*Permission, error) {
 
 // AddRelation add an relation
 func AddRelation(db *sql.DB, aid, rid uint32) error {
-	adminIsActive, err := mysql.IsActive(db, aid)
-	if err != nil {
-		return err
-	}
-
-	if !adminIsActive {
-		return errAdminInactive
-	}
-
 	roleIsActive, err := IsActive(db, rid)
 	if err != nil {
 		return err
@@ -324,16 +312,7 @@ func AddRelation(db *sql.DB, aid, rid uint32) error {
 
 // RemoveRelation delate an relation
 func RemoveRelation(db *sql.DB, aid, rid uint32) error {
-	adminIsActive, err := mysql.IsActive(db, aid)
-	if err != nil {
-		return err
-	}
-
-	if !adminIsActive {
-		return errAdminInactive
-	}
-
-	_, err = db.Exec(relationSQLString[mysqlRelationDelete], aid, rid)
+	_, err := db.Exec(relationSQLString[mysqlRelationDelete], aid, rid)
 	return err
 }
 
@@ -343,15 +322,6 @@ func AdminGetRoleMap(db *sql.DB, aid uint32) (map[uint32]bool, error) {
 		roleID uint32
 		result = make(map[uint32]bool)
 	)
-
-	adminIsActive, err := mysql.IsActive(db, aid)
-	if err != nil {
-		return nil, err
-	}
-
-	if !adminIsActive {
-		return nil, errAdminInactive
-	}
 
 	rows, err := db.Query(relationSQLString[mysqlRelationRoleMap], aid)
 	if err != nil {
@@ -376,15 +346,6 @@ func AssociatedRoleList(db *sql.DB, aid uint32) ([]*RelationData, error) {
 		r      *RelationData
 		result []*RelationData
 	)
-
-	adminIsActive, err := mysql.IsActive(db, aid)
-	if err != nil {
-		return nil, err
-	}
-
-	if !adminIsActive {
-		return nil, errAdminInactive
-	}
 
 	rows, err := db.Query(relationSQLString[mysqlRelationRoleMap], aid)
 

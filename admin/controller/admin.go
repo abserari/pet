@@ -9,17 +9,20 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	jwt "github.com/appleboy/gin-jwt/v2"
 	"log"
 	"net/http"
-	"time"
 
-	mysql "github.com/abserari/pet/admin/model/mysql"
-	jwt "github.com/appleboy/gin-jwt/v2"
+	"github.com/abserari/pet/admin/model/mysql"
 	"github.com/gin-gonic/gin"
 )
 
 var (
-	errActive          = errors.New("Admin active is wrong")
+	// default user
+	name     = "Admin"
+	password = "111111"
+
+	errActive          = errors.New("the admin is not activated")
 	errUserIDNotExists = errors.New("Get Admin ID is not exists")
 	errUserIDNotValid  = func(value interface{}) error {
 		return errors.New(fmt.Sprintf("Get Admin ID is not valid. Is %s", value))
@@ -28,138 +31,57 @@ var (
 
 // Controller external service interface
 type Controller struct {
-	db *sql.DB
+	db  *sql.DB
+	JWT *jwt.GinJWTMiddleware
 }
 
 // New create an external service interface
 func New(db *sql.DB) *Controller {
-	return &Controller{
+	c := &Controller{
 		db: db,
 	}
-}
-
-// RegisterRouter register router. It fatal because there is no service if register failed.
-func (c *Controller) RegisterRouter(r gin.IRouter) {
-	if r == nil {
-		log.Fatal("[InitRouter]: server is nil")
-	}
-	// the jwt middleware
-
-	name := "Admin"
-	password := "111111"
-	err := mysql.CreateTable(c.db, &name, &password)
+	var err error
+	c.JWT, err = c.newJWTMiddleware()
 	if err != nil {
 		log.Fatal(err)
 	}
-	jwtMiddleware, err := c.newJWTMiddleware()
+	return c
+}
+
+// RegisterRouter register router. It fatal because there is no service if register failed.
+func (con *Controller) RegisterRouter(r gin.IRouter) {
+	if r == nil {
+		log.Fatal("[InitRouter]: server is nil")
+	}
+	err := mysql.CreateDatabase(con.db)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = mysql.CreateTable(con.db, &name, &password)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// login and refresh token.
-	r.POST("/login")
-	r.GET("/refresh_token", jwtMiddleware.RefreshHandler)
+	r.POST("/login", con.JWT.LoginHandler)
+	r.GET("/refresh_token", con.JWT.RefreshHandler)
 
+	// Promise to start admin in this router group.
 	// start to add token on every API after admin.RegisterRouter
-	r.Use(jwtMiddleware.MiddlewareFunc())
+	r.Use(con.JWT.MiddlewareFunc())
 	// start to check the user active every time.
-	r.Use(c.checkActive())
+	r.Use(con.CheckActive())
 
 	// admin crud API
-	r.POST("/create", c.create)
-	r.POST("/modify/email", c.modifyEmail)
-	r.POST("/modify/mobile", c.modifyMobile)
-	r.POST("/modify/password", c.modifyPassword)
-	r.POST("/modify/active", c.modifyAdminActive)
+	r.POST("/create", con.create)
+	r.POST("/modify/email", con.modifyEmail)
+	r.POST("/modify/mobile", con.modifyMobile)
+	r.POST("/modify/password", con.modifyPassword)
+	r.POST("/modify/active", con.modifyAdminActive)
 }
 
-func (c *Controller) GetID(ctx *gin.Context) (uint32, error) {
-	id, ok := ctx.Get("userID")
-	if !ok {
-		return 0, errUserIDNotExists
-	}
-
-	v, ok := id.(uint32)
-	if !ok {
-		return 0, errUserIDNotValid(id)
-	}
-	return v, nil
-}
-
-//CheckActive middleware that checks the active
-func (c *Controller) checkActive() func(ctx *gin.Context) {
-	return func(ctx *gin.Context) {
-		a, err := c.GetID(ctx)
-		if err != nil {
-			_ = ctx.AbortWithError(http.StatusBadRequest, err)
-			return
-		}
-
-		active, err := mysql.IsActive(c.db, a)
-		if err != nil {
-			_ = ctx.AbortWithError(http.StatusConflict, err)
-			return
-		}
-
-		if !active {
-			_ = ctx.AbortWithError(http.StatusLocked, errActive)
-			ctx.JSON(http.StatusLocked, gin.H{"status": http.StatusLocked})
-			return
-		}
-	}
-}
-
-func (con *Controller) newJWTMiddleware() (*jwt.GinJWTMiddleware, error) {
-	return jwt.New(&jwt.GinJWTMiddleware{
-		Realm:       "test-pet",
-		Key:         []byte("moli-tech-cats-member"),
-		Timeout:     time.Hour,
-		MaxRefresh:  time.Hour,
-		IdentityKey: "id",
-		// use data as userID here.
-		PayloadFunc: func(data interface{}) jwt.MapClaims {
-			return jwt.MapClaims{
-				"userID": data,
-			}
-		},
-		// just get the ID
-		IdentityHandler: func(c *gin.Context) interface{} {
-			claims := jwt.ExtractClaims(c)
-			return claims["userID"]
-		},
-		Authenticator: func(ctx *gin.Context) (interface{}, error) {
-			return con.Login(ctx)
-		},
-		// no need to check user valid every time.
-		Authorizator: func(data interface{}, c *gin.Context) bool {
-			return true
-		},
-		Unauthorized: func(c *gin.Context, code int, message string) {
-			c.JSON(code, gin.H{
-				"code":    code,
-				"message": message,
-			})
-		},
-		// TokenLookup is a string in the form of "<source>:<name>" that is used
-		// to extract token from the request.
-		// Optional. Default value "header:Authorization".
-		// Possible values:
-		// - "header:<name>"
-		// - "query:<name>"
-		// - "cookie:<name>"
-		// - "param:<name>"
-		TokenLookup: "header: Authorization, query: token, cookie: jwt",
-		// TokenLookup: "query:token",
-		// TokenLookup: "cookie:token",
-
-		// TokenHeadName is a string in the header. Default value is "Bearer"
-		TokenHeadName: "Bearer",
-
-		// TimeFunc provides the current time. You can override it to use another time value. This is useful for testing or if your server uses a different time zone than your tokens.
-		TimeFunc: time.Now,
-	})
-}
-func (c *Controller) create(ctx *gin.Context) {
+func (con *Controller) create(ctx *gin.Context) {
 	var (
 		admin struct {
 			Name     string `json:"name"      binding:"required,alphanum,min=5,max=30"`
@@ -179,7 +101,7 @@ func (c *Controller) create(ctx *gin.Context) {
 		admin.Password = "111111"
 	}
 
-	err = mysql.Create(c.db, &admin.Name, &admin.Password)
+	err = mysql.CreateAdmin(con.db, &admin.Name, &admin.Password)
 	if err != nil {
 		ctx.Error(err)
 		ctx.JSON(http.StatusBadGateway, gin.H{"status": http.StatusBadGateway})
@@ -189,7 +111,7 @@ func (c *Controller) create(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"status": http.StatusOK})
 }
 
-func (c *Controller) modifyEmail(ctx *gin.Context) {
+func (con *Controller) modifyEmail(ctx *gin.Context) {
 	var (
 		admin struct {
 			AdminID uint32 `json:"admin_id"    binding:"required"`
@@ -204,7 +126,7 @@ func (c *Controller) modifyEmail(ctx *gin.Context) {
 		return
 	}
 
-	err = mysql.ModifyEmail(c.db, admin.AdminID, &admin.Email)
+	err = mysql.ModifyEmail(con.db, admin.AdminID, &admin.Email)
 	if err != nil {
 		ctx.Error(err)
 		ctx.JSON(http.StatusBadGateway, gin.H{"status": http.StatusBadGateway})
@@ -214,7 +136,7 @@ func (c *Controller) modifyEmail(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"status": http.StatusOK})
 }
 
-func (c *Controller) modifyMobile(ctx *gin.Context) {
+func (con *Controller) modifyMobile(ctx *gin.Context) {
 	var (
 		admin struct {
 			AdminID uint32 `json:"admin_id"     binding:"required"`
@@ -229,7 +151,7 @@ func (c *Controller) modifyMobile(ctx *gin.Context) {
 		return
 	}
 
-	err = mysql.ModifyMobile(c.db, admin.AdminID, &admin.Mobile)
+	err = mysql.ModifyMobile(con.db, admin.AdminID, &admin.Mobile)
 	if err != nil {
 		ctx.Error(err)
 		ctx.JSON(http.StatusBadGateway, gin.H{"status": http.StatusBadGateway})
@@ -239,7 +161,7 @@ func (c *Controller) modifyMobile(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"status": http.StatusOK})
 }
 
-func (c *Controller) modifyPassword(ctx *gin.Context) {
+func (con *Controller) modifyPassword(ctx *gin.Context) {
 	var (
 		admin struct {
 			AdminID     uint32 `json:"admin_id"       binding:"required"`
@@ -268,7 +190,7 @@ func (c *Controller) modifyPassword(ctx *gin.Context) {
 		return
 	}
 
-	err = mysql.ModifyPassword(c.db, admin.AdminID, &admin.Password, &admin.NewPassword)
+	err = mysql.ModifyPassword(con.db, admin.AdminID, &admin.Password, &admin.NewPassword)
 	if err != nil {
 		ctx.Error(err)
 		ctx.JSON(http.StatusBadGateway, gin.H{"status": http.StatusBadGateway})
@@ -278,7 +200,7 @@ func (c *Controller) modifyPassword(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"status": http.StatusOK})
 }
 
-func (c *Controller) modifyAdminActive(ctx *gin.Context) {
+func (con *Controller) modifyAdminActive(ctx *gin.Context) {
 	var (
 		admin struct {
 			CheckID     uint32 `json:"check_id"    binding:"required"`
@@ -293,7 +215,7 @@ func (c *Controller) modifyAdminActive(ctx *gin.Context) {
 		return
 	}
 
-	err = mysql.ModifyAdminActive(c.db, admin.CheckID, admin.CheckActive)
+	err = mysql.ModifyAdminActive(con.db, admin.CheckID, admin.CheckActive)
 	if err != nil {
 		ctx.Error(err)
 		ctx.JSON(http.StatusBadGateway, gin.H{"status": http.StatusBadGateway})
@@ -304,7 +226,7 @@ func (c *Controller) modifyAdminActive(ctx *gin.Context) {
 }
 
 //Login JWT validation
-func (c *Controller) Login(ctx *gin.Context) (uint32, error) {
+func (con *Controller) Login(ctx *gin.Context) (uint32, error) {
 	var (
 		admin struct {
 			Name     string `json:"name"      binding:"required,alphanum,min=5,max=30"`
@@ -317,7 +239,7 @@ func (c *Controller) Login(ctx *gin.Context) (uint32, error) {
 		return 0, err
 	}
 
-	ID, err := mysql.Login(c.db, &admin.Name, &admin.Password)
+	ID, err := mysql.Login(con.db, &admin.Name, &admin.Password)
 	if err != nil {
 		return 0, err
 	}
