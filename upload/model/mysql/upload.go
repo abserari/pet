@@ -15,6 +15,7 @@ const (
 	mysqlFileCreateTable = iota
 	mysqlFileInsert
 	mysqlFileQueryByMD5
+	mysqlDeleteByPath
 )
 
 var (
@@ -32,6 +33,7 @@ var (
 		 ) ENGINE=InnoDB AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;`,
 		`INSERT INTO files(user_id,md5,path,created_at) VALUES (?,?,?,?)`,
 		`SELECT path FROM files WHERE md5 = ? LOCK IN SHARE MODE`,
+		`DELETE FROM files WHERE path = ? LIMIT 1`,
 	}
 )
 
@@ -71,4 +73,14 @@ func QueryByMD5(db *sql.DB, md5 string) (string, error) {
 	}
 
 	return path, nil
+}
+
+// Delete Clear the records of file so file could reupload.
+func DeleteByPath(db *sql.DB, path string) error {
+	_, err := db.Exec(sqlString[mysqlDeleteByPath], path)
+	if err != nil {
+		return errors.New("errDeleteMysql")
+	}
+
+	return nil
 }

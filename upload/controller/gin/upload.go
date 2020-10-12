@@ -13,6 +13,7 @@ import (
 	"log"
 	"net/http"
 	"path"
+	"strings"
 
 	mysql "github.com/abserari/pet/upload/model/mysql"
 	md "github.com/abserari/pet/util/file"
@@ -72,6 +73,7 @@ func (u *UploadController) RegisterRouter(r gin.IRouter) {
 	}
 
 	r.POST("/upload", u.upload)
+	r.POST("/delete", u.deleteByID)
 }
 
 func (u *UploadController) upload(c *gin.Context) {
@@ -115,7 +117,6 @@ func (u *UploadController) upload(c *gin.Context) {
 		return
 	}
 
-	fileSuffix := path.Ext(header.Filename)
 	filePath, err := mysql.QueryByMD5(u.db, MD5Str)
 	// if the file exists, return it now.
 	if err == nil {
@@ -130,6 +131,8 @@ func (u *UploadController) upload(c *gin.Context) {
 		c.JSON(http.StatusConflict, gin.H{"status": http.StatusConflict})
 		return
 	}
+
+	fileSuffix := path.Ext(header.Filename)
 	filePath = FileUploadDir + "/" + md.ClassifyBySuffix(fileSuffix) + "/" + MD5Str + fileSuffix
 
 	err = md.CopyFile(filePath, newfile)
@@ -147,4 +150,30 @@ func (u *UploadController) upload(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "URL": u.BaseURL + filePath})
+}
+
+func (con *UploadController) deleteByID(c *gin.Context) {
+	var (
+		req struct {
+			Path string `json:"path"    binding:"required"`
+		}
+	)
+
+	err := c.ShouldBind(&req)
+	if err != nil {
+		c.Error(err)
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest})
+		return
+	}
+
+	req.Path = req.Path[strings.Index(req.Path, "files/"):]
+	log.Println(req.Path, con.BaseURL)
+	err = mysql.DeleteByPath(con.db, req.Path)
+	if err != nil {
+		c.Error(err)
+		c.JSON(http.StatusBadGateway, gin.H{"status": http.StatusBadGateway})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK})
 }
