@@ -50,7 +50,7 @@ type UploadController struct {
 func New(db *sql.DB, baseURL string, getUID func(c *gin.Context) (uint32, error)) *UploadController {
 	return &UploadController{
 		db:      db,
-		BaseURL: baseURL,
+		BaseURL: "http://" + baseURL + "/",
 		getUID:  getUID,
 	}
 }
@@ -115,20 +115,21 @@ func (u *UploadController) upload(c *gin.Context) {
 		return
 	}
 
+	fileSuffix := path.Ext(header.Filename)
 	filePath, err := mysql.QueryByMD5(u.db, MD5Str)
+	// if the file exists, return it now.
 	if err == nil {
 		fmt.Println("The file already exists:", filePath)
-		c.JSON(http.StatusNotAcceptable, gin.H{"status": http.StatusNotAcceptable})
+		c.JSON(http.StatusNotAcceptable, gin.H{"status": http.StatusNotAcceptable, "URL": u.BaseURL + filePath})
 		return
 	}
 
+	// check the error if is our expected - NoRows.
 	if err != mysql.ErrNoRows {
 		c.Error(err)
 		c.JSON(http.StatusConflict, gin.H{"status": http.StatusConflict})
 		return
 	}
-
-	fileSuffix := path.Ext(header.Filename)
 	filePath = FileUploadDir + "/" + md.ClassifyBySuffix(fileSuffix) + "/" + MD5Str + fileSuffix
 
 	err = md.CopyFile(filePath, newfile)

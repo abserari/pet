@@ -1,3 +1,4 @@
+// main use to config and run server.
 package main
 
 import (
@@ -9,6 +10,8 @@ import (
 	smservice "github.com/abserari/pet/smservice/controller/gin"
 	service "github.com/abserari/pet/smservice/service"
 	upload "github.com/abserari/pet/upload/controller/gin"
+	"github.com/abserari/pet/upload/fileserver"
+
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -40,8 +43,8 @@ func main() {
 
 	adminCon := admin.New(dbConn)
 	// login and refresh token.
-	router.POST("/login", adminCon.JWT.LoginHandler)
-	router.GET("/refresh_token", adminCon.JWT.RefreshHandler)
+	router.POST("/api/v1/admin/login", adminCon.JWT.LoginHandler)
+	router.GET("/api/v1/admin/refresh_token", adminCon.JWT.RefreshHandler)
 	// start to add token on every API after admin.RegisterRouter
 	router.Use(adminCon.JWT.MiddlewareFunc())
 	// start to check the user active every time.
@@ -52,8 +55,9 @@ func main() {
 	router.Use(permissionCon.CheckPermission())
 	permissionCon.RegisterRouter(router.Group("/api/v1/permission"))
 
-	uploadCon := upload.New(dbConn, "http://0.0.0.1:9573", adminCon.GetID)
+	uploadCon := upload.New(dbConn, "0.0.0.0:9573", adminCon.GetID)
 	uploadCon.RegisterRouter(router.Group("/api/v1/user"))
 
+	go fileserver.StartFileServer("0.0.0.0:9573", "")
 	log.Fatal(router.Run(":8000"))
 }
