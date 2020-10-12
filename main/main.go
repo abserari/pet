@@ -2,6 +2,8 @@ package main
 
 import (
 	"database/sql"
+	"log"
+
 	admin "github.com/abserari/pet/admin/controller"
 	permission "github.com/abserari/pet/permission/controller/gin"
 	smservice "github.com/abserari/pet/smservice/controller/gin"
@@ -9,7 +11,6 @@ import (
 	upload "github.com/abserari/pet/upload/controller/gin"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
-	"log"
 )
 
 type funcv struct{}
@@ -38,13 +39,17 @@ func main() {
 	smserviceCon.RegisterRouter(router.Group("/api/v1/message"))
 
 	adminCon := admin.New(dbConn)
-	adminCon.RegisterRouter(router.Group("/api/v1/admin"))
+	// login and refresh token.
+	router.POST("/login", adminCon.JWT.LoginHandler)
+	router.GET("/refresh_token", adminCon.JWT.RefreshHandler)
 	// start to add token on every API after admin.RegisterRouter
 	router.Use(adminCon.JWT.MiddlewareFunc())
 	// start to check the user active every time.
 	router.Use(adminCon.CheckActive())
+	adminCon.RegisterRouter(router.Group("/api/v1/admin"))
 
 	permissionCon := permission.New(dbConn, adminCon.GetID)
+	router.Use(permissionCon.CheckPermission())
 	permissionCon.RegisterRouter(router.Group("/api/v1/permission"))
 
 	uploadCon := upload.New(dbConn, "http://0.0.0.1:9573", adminCon.GetID)

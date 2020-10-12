@@ -20,15 +20,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ba2af1fb-2f88-484b-8b0c-fa9f7143b0d6" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/admin/controller/middleware.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/controller/admin.go" beforeDir="false" afterPath="$PROJECT_DIR$/admin/controller/admin.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/model/mysql/admin.go" beforeDir="false" afterPath="$PROJECT_DIR$/admin/model/mysql/admin.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/permission/controller/gin/middleware.go" beforeDir="false" afterPath="$PROJECT_DIR$/permission/controller/gin/middleware.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/permission/controller/gin/permission.go" beforeDir="false" afterPath="$PROJECT_DIR$/permission/controller/gin/permission.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/permission/model/mysql/permission.go" beforeDir="false" afterPath="$PROJECT_DIR$/permission/model/mysql/permission.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/util/sms/example/example.go" beforeDir="false" afterPath="$PROJECT_DIR$/util/sms/example/example.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -150,9 +142,9 @@
       <screen x="1982" y="0" width="1474" height="864" />
     </state>
     <state x="2221" y="76" key="SettingsEditor/87.0.1833.1080/1982.0.1474.864@1982.0.1474.864" timestamp="1601907963824" />
-    <state x="2419" y="164" width="600" height="536" key="find.popup" timestamp="1602085456320">
+    <state x="2419" y="164" width="600" height="536" key="find.popup" timestamp="1602141146345">
       <screen x="1982" y="0" width="1474" height="864" />
     </state>
-    <state x="2419" y="164" width="600" height="536" key="find.popup/87.0.1833.1080/1982.0.1474.864@1982.0.1474.864" timestamp="1602085456320" />
+    <state x="2419" y="164" width="600" height="536" key="find.popup/87.0.1833.1080/1982.0.1474.864@1982.0.1474.864" timestamp="1602141146345" />
   </component>
 </project>

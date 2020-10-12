@@ -34,10 +34,10 @@ func New(db *sql.DB, getID func(c *gin.Context) (uint32, error)) *Controller {
 }
 
 // todo: add configuration on user-defined API
-func (c *Controller)InitWithUserAPI(){
+func (c *Controller) InitWithUserAPI() {
 	c.initWithRole()
 }
-func (c *Controller)initWithRole() {}
+func (c *Controller) initWithRole() {}
 
 //RegisterRouter register router and from now on, every API would check if valid on current AdminID.
 // Should init the permission to the API.
@@ -49,8 +49,8 @@ func (c *Controller) RegisterRouter(r gin.IRouter) {
 	// init with user defined API.
 	c.InitWithUserAPI()
 
-	// from now on, every API would check if valid on current AdminID.
-	r.Use(c.CheckPermission())
+	// choose if from now on, every API would check if valid on current AdminID.
+	// r.Use(c.CheckPermission())
 
 	// role table
 	r.POST("/addrole", c.createRole)

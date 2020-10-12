@@ -62,17 +62,7 @@ func (con *Controller) RegisterRouter(r gin.IRouter) {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	// login and refresh token.
-	r.POST("/login", con.JWT.LoginHandler)
-	r.GET("/refresh_token", con.JWT.RefreshHandler)
-
-	// Promise to start admin in this router group.
-	// start to add token on every API after admin.RegisterRouter
-	r.Use(con.JWT.MiddlewareFunc())
-	// start to check the user active every time.
-	r.Use(con.CheckActive())
-
+	
 	// admin crud API
 	r.POST("/create", con.create)
 	r.POST("/modify/email", con.modifyEmail)
