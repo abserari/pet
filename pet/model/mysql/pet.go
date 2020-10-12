@@ -12,9 +12,9 @@ import (
 	"time"
 )
 
-// Banner -
-type Banner struct {
-	BannerID  int
+// Pet -
+type Pet struct {
+	PetID     int
 	Name      string
 	ImagePath string
 	EventPath string
@@ -23,11 +23,11 @@ type Banner struct {
 }
 
 const (
-	mysqlBannerCreateTable = iota
-	mysqlBannerInsert
-	mysqlBannerLisitValidBanner
-	mysqlBannerInfoByID
-	mysqlBannerDeleteByID
+	mysqlPetCreateTable = iota
+	mysqlPetInsert
+	mysqlPetLisitValidPet
+	mysqlPetInfoByID
+	mysqlPetDeleteByID
 )
 
 var (
@@ -52,14 +52,14 @@ var (
 
 // CreateTable -
 func CreateTable(db *sql.DB, tableName string) error {
-	sql := fmt.Sprintf(bannerSQLString[mysqlBannerCreateTable], tableName)
+	sql := fmt.Sprintf(bannerSQLString[mysqlPetCreateTable], tableName)
 	_, err := db.Exec(sql)
 	return err
 }
 
-// InsertBanner return  id
-func InsertBanner(db *sql.DB, tableName string, name string, imagePath string, eventPath string, startDate time.Time, endDate time.Time) (int, error) {
-	sql := fmt.Sprintf(bannerSQLString[mysqlBannerInsert], tableName)
+// InsertPet return  id
+func InsertPet(db *sql.DB, tableName string, name string, imagePath string, eventPath string, startDate time.Time, endDate time.Time) (int, error) {
+	sql := fmt.Sprintf(bannerSQLString[mysqlPetInsert], tableName)
 	result, err := db.Exec(sql, name, imagePath, eventPath, startDate, endDate)
 	if err != nil {
 		return 0, err
@@ -77,10 +77,10 @@ func InsertBanner(db *sql.DB, tableName string, name string, imagePath string, e
 	return int(bannerID), nil
 }
 
-// LisitValidBannerByUnixDate return schedule list which have valid date
-func LisitValidBannerByUnixDate(db *sql.DB, tableName string, unixtime int64) ([]*Banner, error) {
+// LisitValidPetByUnixDate return schedule list which have valid date
+func LisitValidPetByUnixDate(db *sql.DB, tableName string, unixtime int64) ([]*Pet, error) {
 	var (
-		bans []*Banner
+		bans []*Pet
 
 		bannerID  int
 		name      string
@@ -90,7 +90,7 @@ func LisitValidBannerByUnixDate(db *sql.DB, tableName string, unixtime int64) ([
 		endDate   string
 	)
 
-	sql := fmt.Sprintf(bannerSQLString[mysqlBannerLisitValidBanner], tableName)
+	sql := fmt.Sprintf(bannerSQLString[mysqlPetLisitValidPet], tableName)
 	rows, err := db.Query(sql, unixtime, unixtime)
 	if err != nil {
 		return nil, err
@@ -102,8 +102,8 @@ func LisitValidBannerByUnixDate(db *sql.DB, tableName string, unixtime int64) ([
 			return nil, err
 		}
 
-		ban := &Banner{
-			BannerID:  bannerID,
+		ban := &Pet{
+			PetID:     bannerID,
 			Name:      name,
 			ImagePath: imagePath,
 			EventPath: eventPath,
@@ -118,10 +118,10 @@ func LisitValidBannerByUnixDate(db *sql.DB, tableName string, unixtime int64) ([
 }
 
 // InfoByID squery by id
-func InfoByID(db *sql.DB, tableName string, id int) (*Banner, error) {
-	var ban Banner
+func InfoByID(db *sql.DB, tableName string, id int) (*Pet, error) {
+	var ban Pet
 
-	sql := fmt.Sprintf(bannerSQLString[mysqlBannerInfoByID], tableName)
+	sql := fmt.Sprintf(bannerSQLString[mysqlPetInfoByID], tableName)
 	rows, err := db.Query(sql, id)
 	if err != nil {
 		return nil, err
@@ -129,7 +129,7 @@ func InfoByID(db *sql.DB, tableName string, id int) (*Banner, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		if err := rows.Scan(&ban.BannerID, &ban.Name, &ban.ImagePath, &ban.EventPath, &ban.StartDate, &ban.EndDate); err != nil {
+		if err := rows.Scan(&ban.PetID, &ban.Name, &ban.ImagePath, &ban.EventPath, &ban.StartDate, &ban.EndDate); err != nil {
 			return nil, err
 		}
 	}
@@ -139,7 +139,7 @@ func InfoByID(db *sql.DB, tableName string, id int) (*Banner, error) {
 
 // DeleteByID delete by id
 func DeleteByID(db *sql.DB, tableName string, id int) error {
-	sql := fmt.Sprintf(bannerSQLString[mysqlBannerDeleteByID], tableName)
+	sql := fmt.Sprintf(bannerSQLString[mysqlPetDeleteByID], tableName)
 	_, err := db.Exec(sql, id)
 	return err
 }
