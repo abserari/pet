@@ -10,6 +10,7 @@ import (
 	smservice "github.com/abserari/pet/smservice/controller/gin"
 	service "github.com/abserari/pet/smservice/service"
 	upload "github.com/abserari/pet/upload/controller/gin"
+	pet "github.com/abserari/pet/pet/controller/gin"
 	"github.com/abserari/pet/upload/fileserver"
 
 	"github.com/gin-gonic/gin"
@@ -26,7 +27,7 @@ func main() {
 
 	router := gin.Default()
 
-	dbConn, err := sql.Open("mysql", "root:123456@tcp(192.168.0.253:3307)/test")
+	dbConn, err := sql.Open("mysql", "root:123456@tcp(192.168.0.253:3307)/test?parseTime=true")
 	if err != nil {
 		panic(err)
 	}
@@ -54,6 +55,9 @@ func main() {
 	permissionCon := permission.New(dbConn, adminCon.GetID)
 	router.Use(permissionCon.CheckPermission())
 	permissionCon.RegisterRouter(router.Group("/api/v1/permission"))
+
+	petCon := pet.New(dbConn, "pet")
+	petCon.RegisterRouter(router.Group("/api/v1/pet"))
 
 	uploadCon := upload.New(dbConn, "0.0.0.0:9573", adminCon.GetID)
 	uploadCon.RegisterRouter(router.Group("/api/v1/user"))
