@@ -20,12 +20,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ba2af1fb-2f88-484b-8b0c-fa9f7143b0d6" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/schedule/controller/gin/pet.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pet/controller/gin/pet.go" beforeDir="false" afterPath="$PROJECT_DIR$/pet/controller/gin/pet.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pet/model/mysql/pet.go" beforeDir="false" afterPath="$PROJECT_DIR$/pet/model/mysql/pet.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schedule/controller/gin/banner.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/smservice/model/mysql/smservice.go" beforeDir="false" afterPath="$PROJECT_DIR$/smservice/model/mysql/smservice.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

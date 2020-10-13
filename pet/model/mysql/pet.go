@@ -157,7 +157,7 @@ func InfoByID(db *sql.DB, tableName string, id uint64) (*Pet, error) {
 }
 
 // ModifyEmail the administrative user updates email
-func ModifyName(db *sql.DB, id uint64, name *string) error {
+func ModifyName(db *sql.DB, id uint64, name string) error {
 
 	result, err := db.Exec(petSQLString[mysqlPetUpdateNameByID], name, id)
 	if err != nil {
@@ -172,7 +172,7 @@ func ModifyName(db *sql.DB, id uint64, name *string) error {
 }
 
 // ModifyEmail the administrative user updates email
-func ModifyCategory(db *sql.DB, id uint64, category *string) error {
+func ModifyCategory(db *sql.DB, id uint64, category string) error {
 	result, err := db.Exec(petSQLString[mysqlPetUpdateCategoryByID], category, id)
 	if err != nil {
 		return err
@@ -184,7 +184,7 @@ func ModifyCategory(db *sql.DB, id uint64, category *string) error {
 
 	return nil
 } // ModifyAvatar the administrative user updates email
-func ModifyAvatar(db *sql.DB, id uint64, avatar *string) error {
+func ModifyAvatar(db *sql.DB, id uint64, avatar string) error {
 	result, err := db.Exec(petSQLString[mysqlPetUpdateAvatarByID], avatar, id)
 	if err != nil {
 		return err
@@ -198,7 +198,7 @@ func ModifyAvatar(db *sql.DB, id uint64, avatar *string) error {
 }
 
 // ModifyEmail the administrative user updates email
-func ModifyBirthday(db *sql.DB, id uint64, birthday *time.Time) error {
+func ModifyBirthday(db *sql.DB, id uint64, birthday time.Time) error {
 
 	result, err := db.Exec(petSQLString[mysqlPetUpdateBirthdayByID], birthday, id)
 	if err != nil {
@@ -213,7 +213,7 @@ func ModifyBirthday(db *sql.DB, id uint64, birthday *time.Time) error {
 }
 
 // ModifyEmail the administrative user updates email
-func ModifyMedicalCurrent(db *sql.DB, id uint64, MedicalCurrent *string) error {
+func ModifyMedicalCurrent(db *sql.DB, id uint64, MedicalCurrent string) error {
 
 	result, err := db.Exec(petSQLString[mysqlPetUpdateMedicalCurrentByID], MedicalCurrent, id)
 	if err != nil {
@@ -228,7 +228,7 @@ func ModifyMedicalCurrent(db *sql.DB, id uint64, MedicalCurrent *string) error {
 }
 
 // ModifyEmail the administrative user updates email
-func ModifyHobbies(db *sql.DB, id uint64, hobbies *string) error {
+func ModifyHobbies(db *sql.DB, id uint64, hobbies string) error {
 
 	result, err := db.Exec(petSQLString[mysqlPetUpdateHobbiesByID], hobbies, id)
 	if err != nil {
@@ -243,7 +243,7 @@ func ModifyHobbies(db *sql.DB, id uint64, hobbies *string) error {
 }
 
 // DeleteByID delete by id
-func DeleteByID(db *sql.DB, tableName string, id int) error {
+func DeleteByID(db *sql.DB, tableName string, id uint64) error {
 	sql := fmt.Sprintf(petSQLString[mysqlPetDeleteByID], tableName)
 	_, err := db.Exec(sql, id)
 	return err
