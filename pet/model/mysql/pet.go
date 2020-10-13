@@ -22,6 +22,7 @@ type Pet struct {
 	Birthday       time.Time
 	MedicalCurrent string
 	Hobbies        string
+	Gender         string
 }
 
 const (
@@ -35,6 +36,7 @@ const (
 	mysqlPetUpdateBirthdayByID
 	mysqlPetUpdateMedicalCurrentByID
 	mysqlPetUpdateHobbiesByID
+	mysqlPetUpdateGenderByID
 	mysqlPetDeleteByID
 )
 
@@ -51,18 +53,20 @@ avatar   VARCHAR(512) NOT NULL DEFAULT ' ',
 birthday   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 medicalCurrent     VARCHAR(512) NOT NULL DEFAULT ' ',
 hobbies     VARCHAR(512) NOT NULL DEFAULT ' ',
+gender VARCHAR(127) NOT NULL DEFAULT '中性',
 PRIMARY KEY (petID)
 )ENGINE=InnoDB AUTO_INCREMENT=1000000 DEFAULT CHARSET=utf8mb4;`,
-		`INSERT INTO  %s (adminID,name,category,avatar,birthday,medicalCurrent,hobbies) VALUES (?,?,?,?,?,?,?)`,
+		`INSERT INTO  %s (adminID,name,category,avatar,birthday,medicalCurrent,hobbies,gender) VALUES (?,?,?,?,?,?,?,?)`,
 		`SELECT * FROM %s WHERE adminID = ? LOCK IN SHARE MODE`,
-		`SELECT * FROM %s WHERE petid = ? LIMIT 1 LOCK IN SHARE MODE`,
-		`UPDATE %s SET name=? WHERE petid = ? LIMIT 1`,
-		`UPDATE %s SET category=? WHERE petid = ? LIMIT 1`,
-		`UPDATE %s SET avatar=? WHERE petid = ? LIMIT 1`,
-		`UPDATE %s SET birthday=? WHERE petid = ? LIMIT 1`,
-		`UPDATE %s SET medicalCurrent=? WHERE petid = ? LIMIT 1`,
-		`UPDATE %s SET hobbies=? WHERE petid = ? LIMIT 1`,
-		`DELETE FROM %s WHERE petid = ? LIMIT 1`,
+		`SELECT * FROM %s WHERE petID = ? LIMIT 1 LOCK IN SHARE MODE`,
+		`UPDATE %s SET name=? WHERE petID = ? LIMIT 1`,
+		`UPDATE %s SET category=? WHERE petID = ? LIMIT 1`,
+		`UPDATE %s SET avatar=? WHERE petID = ? LIMIT 1`,
+		`UPDATE %s SET birthday=? WHERE petID = ? LIMIT 1`,
+		`UPDATE %s SET medicalCurrent=? WHERE petID = ? LIMIT 1`,
+		`UPDATE %s SET hobbies=? WHERE petID = ? LIMIT 1`,
+		`UPDATE %s SET gender=? WHERE petID = ? LIMIT 1`,
+		`DELETE FROM %s WHERE petID = ? LIMIT 1`,
 	}
 )
 
@@ -74,9 +78,9 @@ func CreateTable(db *sql.DB, tableName string) error {
 }
 
 // InsertPet return  id
-func InsertPet(db *sql.DB, tableName string, adminID uint64, name, category, avatar string, birthday time.Time, medical_current, hobbies string) (int, error) {
+func InsertPet(db *sql.DB, tableName string, adminID uint64, name, category, avatar string, birthday time.Time, medical_current, hobbies, gender string) (int, error) {
 	sql := fmt.Sprintf(petSQLString[mysqlPetInsert], tableName)
-	result, err := db.Exec(sql, adminID, name, category, avatar, birthday, medical_current, hobbies)
+	result, err := db.Exec(sql, adminID, name, category, avatar, birthday, medical_current, hobbies, gender)
 	if err != nil {
 		return 0, err
 	}
@@ -105,6 +109,7 @@ func ListPetByAdminID(db *sql.DB, tableName string, adminID uint64) ([]*Pet, err
 		birthday       time.Time
 		medicalCurrent string
 		hobbies        string
+		gender         string
 	)
 
 	sql := fmt.Sprintf(petSQLString[mysqlPetListPetByAdminID], tableName)
@@ -115,7 +120,7 @@ func ListPetByAdminID(db *sql.DB, tableName string, adminID uint64) ([]*Pet, err
 	defer rows.Close()
 
 	for rows.Next() {
-		if err := rows.Scan(&petID, &adminID, &name, &category, &avatar, &birthday, &medicalCurrent, &hobbies); err != nil {
+		if err := rows.Scan(&petID, &adminID, &name, &category, &avatar, &birthday, &medicalCurrent, &hobbies, &gender); err != nil {
 			return nil, err
 		}
 
@@ -128,6 +133,7 @@ func ListPetByAdminID(db *sql.DB, tableName string, adminID uint64) ([]*Pet, err
 			Birthday:       birthday,
 			MedicalCurrent: medicalCurrent,
 			Hobbies:        hobbies,
+			Gender:         gender,
 		}
 
 		pets = append(pets, pet)
@@ -148,7 +154,7 @@ func InfoByID(db *sql.DB, tableName string, id uint64) (*Pet, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		if err := rows.Scan(&pet.PetID, &pet.AdminID, &pet.Name, &pet.Category, &pet.Avatar, &pet.Birthday, &pet.MedicalCurrent, &pet.Hobbies); err != nil {
+		if err := rows.Scan(&pet.PetID, &pet.AdminID, &pet.Name, &pet.Category, &pet.Avatar, &pet.Birthday, &pet.MedicalCurrent, &pet.Hobbies, &pet.Gender); err != nil {
 			return nil, err
 		}
 	}
@@ -158,7 +164,6 @@ func InfoByID(db *sql.DB, tableName string, id uint64) (*Pet, error) {
 
 // ModifyEmail the administrative user updates email
 func ModifyName(db *sql.DB, id uint64, name string) error {
-
 	result, err := db.Exec(petSQLString[mysqlPetUpdateNameByID], name, id)
 	if err != nil {
 		return err
@@ -199,7 +204,6 @@ func ModifyAvatar(db *sql.DB, id uint64, avatar string) error {
 
 // ModifyEmail the administrative user updates email
 func ModifyBirthday(db *sql.DB, id uint64, birthday time.Time) error {
-
 	result, err := db.Exec(petSQLString[mysqlPetUpdateBirthdayByID], birthday, id)
 	if err != nil {
 		return err
@@ -214,7 +218,6 @@ func ModifyBirthday(db *sql.DB, id uint64, birthday time.Time) error {
 
 // ModifyEmail the administrative user updates email
 func ModifyMedicalCurrent(db *sql.DB, id uint64, MedicalCurrent string) error {
-
 	result, err := db.Exec(petSQLString[mysqlPetUpdateMedicalCurrentByID], MedicalCurrent, id)
 	if err != nil {
 		return err
@@ -229,8 +232,21 @@ func ModifyMedicalCurrent(db *sql.DB, id uint64, MedicalCurrent string) error {
 
 // ModifyEmail the administrative user updates email
 func ModifyHobbies(db *sql.DB, id uint64, hobbies string) error {
-
 	result, err := db.Exec(petSQLString[mysqlPetUpdateHobbiesByID], hobbies, id)
+	if err != nil {
+		return err
+	}
+
+	if rows, _ := result.RowsAffected(); rows == 0 {
+		return errInvalidNoRowsAffected
+	}
+
+	return nil
+}
+
+// ModifyEmail the administrative user updates email
+func ModifyGender(db *sql.DB, id uint64, gender string) error {
+	result, err := db.Exec(petSQLString[mysqlPetUpdateGenderByID], gender, id)
 	if err != nil {
 		return err
 	}
