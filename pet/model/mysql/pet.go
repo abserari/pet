@@ -14,114 +14,133 @@ import (
 
 // Pet -
 type Pet struct {
-	PetID     int
-	Name      string
-	ImagePath string
-	EventPath string
-	StartDate string
-	EndDate   string
+	PetID          uint64
+	AdminID        uint64
+	Name           string
+	Category       string
+	Avatar         string
+	Birthday       time.Time
+	MedicalCurrent string
+	Hobbies        string
 }
 
 const (
 	mysqlPetCreateTable = iota
 	mysqlPetInsert
-	mysqlPetLisitValidPet
+	mysqlPetListPetByAdminID
 	mysqlPetInfoByID
+	mysqlPetUpdateNameByID
+	mysqlPetUpdateCategoryByID
+	mysqlPetUpdateAvatarByID
+	mysqlPetUpdateBirthdayByID
+	mysqlPetUpdateMedicalCurrentByID
+	mysqlPetUpdateHobbiesByID
 	mysqlPetDeleteByID
 )
 
 var (
-	errInvalidInsert = errors.New("insert schedule:insert affected 0 rows")
+	errInvalidNoRowsAffected = errors.New("insert schedule:insert affected 0 rows")
 
-	bannerSQLString = []string{
+	petSQLString = []string{
 		`CREATE TABLE IF NOT EXISTS %s (
-			bannerId    INT NOT NULL AUTO_INCREMENT,
-			name        VARCHAR(512) UNIQUE DEFAULT NULL,
-			imagePath   VARCHAR(512) DEFAULT NULL,
-			eventPath   VARCHAR(512) DEFAULT NULL,
-			startDate   DATETIME NOT NULL,
-			endDate     DATETIME NOT NULL,
-			PRIMARY KEY (bannerId)
-		)ENGINE=InnoDB AUTO_INCREMENT=1000000 DEFAULT CHARSET=utf8mb4`,
-		`INSERT INTO  %s (name,imagePath,eventPath,startDate,endDate) VALUES (?,?,?,?,?)`,
-		`SELECT * FROM %s WHERE unix_timestamp(startDate) <= ? AND unix_timestamp(endDate) >= ? LOCK IN SHARE MODE`,
-		`SELECT * FROM %s WHERE bannerid = ? LIMIT 1 LOCK IN SHARE MODE`,
-		`DELETE FROM %s WHERE bannerid = ? LIMIT 1`,
+petID    BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+adminID    BIGINT UNSIGNED NOT NULL,
+name        VARCHAR(512) NOT NULL DEFAULT ' ',
+category VARCHAR(255)  NOT NULL DEFAULT ' ',
+avatar   VARCHAR(512) NOT NULL DEFAULT ' ',
+birthday   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+medicalCurrent     VARCHAR(512) NOT NULL DEFAULT ' ',
+hobbies     VARCHAR(512) NOT NULL DEFAULT ' ',
+PRIMARY KEY (petID),
+)ENGINE=InnoDB AUTO_INCREMENT=1000000 DEFAULT CHARSET=utf8mb4;`,
+		`INSERT INTO  %s (adminID,name,category,avatar,birthday,medicalCurrent,hobbies) VALUES (?,?,?,?,?,?,?)`,
+		`SELECT * FROM %s WHERE adminID = ? LOCK IN SHARE MODE`,
+		`SELECT * FROM %s WHERE petid = ? LIMIT 1 LOCK IN SHARE MODE`,
+		`UPDATE %s SET name=? WHERE petid = ? LIMIT 1`,
+		`UPDATE %s SET category=? WHERE petid = ? LIMIT 1`,
+		`UPDATE %s SET avatar=? WHERE petid = ? LIMIT 1`,
+		`UPDATE %s SET birthday=? WHERE petid = ? LIMIT 1`,
+		`UPDATE %s SET medicalCurrent=? WHERE petid = ? LIMIT 1`,
+		`UPDATE %s SET hobbies=? WHERE petid = ? LIMIT 1`,
+		`DELETE FROM %s WHERE petid = ? LIMIT 1`,
 	}
 )
 
 // CreateTable -
 func CreateTable(db *sql.DB, tableName string) error {
-	sql := fmt.Sprintf(bannerSQLString[mysqlPetCreateTable], tableName)
+	sql := fmt.Sprintf(petSQLString[mysqlPetCreateTable], tableName)
 	_, err := db.Exec(sql)
 	return err
 }
 
 // InsertPet return  id
-func InsertPet(db *sql.DB, tableName string, name string, imagePath string, eventPath string, startDate time.Time, endDate time.Time) (int, error) {
-	sql := fmt.Sprintf(bannerSQLString[mysqlPetInsert], tableName)
-	result, err := db.Exec(sql, name, imagePath, eventPath, startDate, endDate)
+func InsertPet(db *sql.DB, tableName string, adminID uint64, name, category, avatar string, birthday time.Time, medical_current, hobbies string) (int, error) {
+	sql := fmt.Sprintf(petSQLString[mysqlPetInsert], tableName)
+	result, err := db.Exec(sql, adminID, name, category, avatar, birthday, medical_current, hobbies)
 	if err != nil {
 		return 0, err
 	}
 
 	if rows, _ := result.RowsAffected(); rows == 0 {
-		return 0, errInvalidInsert
+		return 0, errInvalidNoRowsAffected
 	}
 
-	bannerID, err := result.LastInsertId()
+	petID, err := result.LastInsertId()
 	if err != nil {
 		return 0, err
 	}
 
-	return int(bannerID), nil
+	return int(petID), nil
 }
 
-// LisitValidPetByUnixDate return schedule list which have valid date
-func LisitValidPetByUnixDate(db *sql.DB, tableName string, unixtime int64) ([]*Pet, error) {
+// ListValidPetByUnixDate return schedule list which have valid date
+func ListPetByAdminID(db *sql.DB, tableName string, adminID uint64) ([]*Pet, error) {
 	var (
-		bans []*Pet
+		pets []*Pet
 
-		bannerID  int
-		name      string
-		imagePath string
-		eventPath string
-		startDate string
-		endDate   string
+		petID          uint64
+		name           string
+		category       string
+		avatar         string
+		birthday       time.Time
+		medicalCurrent string
+		hobbies        string
 	)
 
-	sql := fmt.Sprintf(bannerSQLString[mysqlPetLisitValidPet], tableName)
-	rows, err := db.Query(sql, unixtime, unixtime)
+	sql := fmt.Sprintf(petSQLString[mysqlPetListPetByAdminID], tableName)
+	rows, err := db.Query(sql, adminID)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
 	for rows.Next() {
-		if err := rows.Scan(&bannerID, &name, &imagePath, &eventPath, &startDate, &endDate); err != nil {
+		if err := rows.Scan(&petID, &adminID, &name, &category, &avatar, &birthday, &medicalCurrent, &hobbies); err != nil {
 			return nil, err
 		}
 
-		ban := &Pet{
-			PetID:     bannerID,
-			Name:      name,
-			ImagePath: imagePath,
-			EventPath: eventPath,
-			StartDate: startDate,
-			EndDate:   endDate,
+		pet := &Pet{
+			PetID:          petID,
+			AdminID:        adminID,
+			Name:           name,
+			Category:       category,
+			Avatar:         avatar,
+			Birthday:       birthday,
+			MedicalCurrent: medicalCurrent,
+			Hobbies:        hobbies,
 		}
 
-		bans = append(bans, ban)
+		pets = append(pets, pet)
 	}
 
-	return bans, nil
+	return pets, nil
 }
 
 // InfoByID squery by id
-func InfoByID(db *sql.DB, tableName string, id int) (*Pet, error) {
-	var ban Pet
+func InfoByID(db *sql.DB, tableName string, id uint64) (*Pet, error) {
+	var pet Pet
 
-	sql := fmt.Sprintf(bannerSQLString[mysqlPetInfoByID], tableName)
+	sql := fmt.Sprintf(petSQLString[mysqlPetInfoByID], tableName)
 	rows, err := db.Query(sql, id)
 	if err != nil {
 		return nil, err
@@ -129,17 +148,103 @@ func InfoByID(db *sql.DB, tableName string, id int) (*Pet, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		if err := rows.Scan(&ban.PetID, &ban.Name, &ban.ImagePath, &ban.EventPath, &ban.StartDate, &ban.EndDate); err != nil {
+		if err := rows.Scan(&pet.PetID, &pet.AdminID, &pet.Name, &pet.Category, &pet.Avatar, &pet.Birthday, &pet.MedicalCurrent, &pet.Hobbies); err != nil {
 			return nil, err
 		}
 	}
 
-	return &ban, nil
+	return &pet, nil
+}
+
+// ModifyEmail the administrative user updates email
+func ModifyName(db *sql.DB, id uint64, name *string) error {
+
+	result, err := db.Exec(petSQLString[mysqlPetUpdateNameByID], name, id)
+	if err != nil {
+		return err
+	}
+
+	if rows, _ := result.RowsAffected(); rows == 0 {
+		return errInvalidNoRowsAffected
+	}
+
+	return nil
+}
+
+// ModifyEmail the administrative user updates email
+func ModifyCategory(db *sql.DB, id uint64, category *string) error {
+	result, err := db.Exec(petSQLString[mysqlPetUpdateCategoryByID], category, id)
+	if err != nil {
+		return err
+	}
+
+	if rows, _ := result.RowsAffected(); rows == 0 {
+		return errInvalidNoRowsAffected
+	}
+
+	return nil
+} // ModifyAvatar the administrative user updates email
+func ModifyAvatar(db *sql.DB, id uint64, avatar *string) error {
+	result, err := db.Exec(petSQLString[mysqlPetUpdateAvatarByID], avatar, id)
+	if err != nil {
+		return err
+	}
+
+	if rows, _ := result.RowsAffected(); rows == 0 {
+		return errInvalidNoRowsAffected
+	}
+
+	return nil
+}
+
+// ModifyEmail the administrative user updates email
+func ModifyBirthday(db *sql.DB, id uint64, birthday *time.Time) error {
+
+	result, err := db.Exec(petSQLString[mysqlPetUpdateBirthdayByID], birthday, id)
+	if err != nil {
+		return err
+	}
+
+	if rows, _ := result.RowsAffected(); rows == 0 {
+		return errInvalidNoRowsAffected
+	}
+
+	return nil
+}
+
+// ModifyEmail the administrative user updates email
+func ModifyMedicalCurrent(db *sql.DB, id uint64, MedicalCurrent *string) error {
+
+	result, err := db.Exec(petSQLString[mysqlPetUpdateMedicalCurrentByID], MedicalCurrent, id)
+	if err != nil {
+		return err
+	}
+
+	if rows, _ := result.RowsAffected(); rows == 0 {
+		return errInvalidNoRowsAffected
+	}
+
+	return nil
+}
+
+// ModifyEmail the administrative user updates email
+func ModifyHobbies(db *sql.DB, id uint64, hobbies *string) error {
+
+	result, err := db.Exec(petSQLString[mysqlPetUpdateHobbiesByID], hobbies, id)
+	if err != nil {
+		return err
+	}
+
+	if rows, _ := result.RowsAffected(); rows == 0 {
+		return errInvalidNoRowsAffected
+	}
+
+	return nil
 }
 
 // DeleteByID delete by id
 func DeleteByID(db *sql.DB, tableName string, id int) error {
-	sql := fmt.Sprintf(bannerSQLString[mysqlPetDeleteByID], tableName)
+	sql := fmt.Sprintf(petSQLString[mysqlPetDeleteByID], tableName)
 	_, err := db.Exec(sql, id)
 	return err
 }

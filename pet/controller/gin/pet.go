@@ -11,26 +11,26 @@ import (
 	"net/http"
 	"time"
 
-	mysql "github.com/abserari/pet/schedule/model/mysql"
+	mysql "github.com/abserari/pet/pet/model/mysql"
 	"github.com/gin-gonic/gin"
 )
 
-// BannerController -
-type BannerController struct {
+// PetController -
+type PetController struct {
 	db        *sql.DB
 	tableName string
 }
 
 // New -
-func New(db *sql.DB, tableName string) *BannerController {
-	return &BannerController{
+func New(db *sql.DB, tableName string) *PetController {
+	return &PetController{
 		db:        db,
 		tableName: tableName,
 	}
 }
 
 // RegisterRouter -
-func (b *BannerController) RegisterRouter(r gin.IRouter) {
+func (b *PetController) RegisterRouter(r gin.IRouter) {
 	if r == nil {
 		log.Fatal("[InitRouter]: server is nil")
 	}
@@ -43,10 +43,10 @@ func (b *BannerController) RegisterRouter(r gin.IRouter) {
 	r.POST("/create", b.create)
 	r.POST("/delete", b.deleteByID)
 	r.POST("/info/id", b.infoByID)
-	r.POST("/list/date", b.lisitValidBannerByUnixDate)
+	r.POST("/list/date", b.lisitValidPetByUnixDate)
 }
 
-func (b *BannerController) create(c *gin.Context) {
+func (b *PetController) create(c *gin.Context) {
 	var (
 		req struct {
 			Name      string    `json:"name"      binding:"required"`
@@ -64,7 +64,7 @@ func (b *BannerController) create(c *gin.Context) {
 		return
 	}
 
-	id, err := mysql.InsertBanner(b.db, b.tableName, req.Name, req.ImagePath, req.EventPath, req.StartDate, req.EndDate)
+	id, err := mysql.InsertPet(b.db, b.tableName, req.Name, req.ImagePath, req.EventPath, req.StartDate, req.EndDate)
 	if err != nil {
 		c.Error(err)
 		c.JSON(http.StatusBadGateway, gin.H{"status": http.StatusBadGateway})
@@ -74,7 +74,7 @@ func (b *BannerController) create(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "ID": id})
 }
 
-func (b *BannerController) lisitValidBannerByUnixDate(c *gin.Context) {
+func (b *PetController) lisitValidPetByUnixDate(c *gin.Context) {
 	var (
 		req struct {
 			Unixtime int64 `json:"unixtime"    binding:"required"`
@@ -88,17 +88,17 @@ func (b *BannerController) lisitValidBannerByUnixDate(c *gin.Context) {
 		return
 	}
 
-	banners, err := mysql.LisitValidBannerByUnixDate(b.db, b.tableName, req.Unixtime)
+	pets, err := mysql.LisitValidPetByUnixDate(b.db, b.tableName, req.Unixtime)
 	if err != nil {
 		c.Error(err)
 		c.JSON(http.StatusBadGateway, gin.H{"status": http.StatusBadGateway})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "banners": banners})
+	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "pets": pets})
 }
 
-func (b *BannerController) infoByID(c *gin.Context) {
+func (b *PetController) infoByID(c *gin.Context) {
 	var (
 		req struct {
 			ID int `json:"id"     binding:"required"`
@@ -122,7 +122,7 @@ func (b *BannerController) infoByID(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "ban": ban})
 }
 
-func (b *BannerController) deleteByID(c *gin.Context) {
+func (b *PetController) deleteByID(c *gin.Context) {
 	var (
 		req struct {
 			ID int `json:"id"    binding:"required"`
