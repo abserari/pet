@@ -51,7 +51,7 @@ avatar   VARCHAR(512) NOT NULL DEFAULT ' ',
 birthday   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 medicalCurrent     VARCHAR(512) NOT NULL DEFAULT ' ',
 hobbies     VARCHAR(512) NOT NULL DEFAULT ' ',
-PRIMARY KEY (petID),
+PRIMARY KEY (petID)
 )ENGINE=InnoDB AUTO_INCREMENT=1000000 DEFAULT CHARSET=utf8mb4;`,
 		`INSERT INTO  %s (adminID,name,category,avatar,birthday,medicalCurrent,hobbies) VALUES (?,?,?,?,?,?,?)`,
 		`SELECT * FROM %s WHERE adminID = ? LOCK IN SHARE MODE`,

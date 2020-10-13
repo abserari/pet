@@ -57,11 +57,11 @@ func (b *PetController) create(c *gin.Context) {
 		req struct {
 			AdminID        uint64    `json:"adminID"    binding:"required"`
 			Name           string    `json:"name"      binding:"required"`
-			Category       string    `json:"category" binding:"required"`
-			Avatar         string    `json:"avatar" binding:"required"`
-			Birthday       time.Time `json:"birthday"     binding:"required"`
-			MedicalCurrent string    `json:"medicalCurrent"  binding:"required"`
-			Hobbies        string    `json:"hobbies"  binding:"required"`
+			Category       string    `json:"category" `
+			Avatar         string    `json:"avatar" `
+			Birthday       time.Time `json:"birthday" `
+			MedicalCurrent string    `json:"medicalCurrent" `
+			Hobbies        string    `json:"hobbies" `
 		}
 	)
 
