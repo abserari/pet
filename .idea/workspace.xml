@@ -20,11 +20,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ba2af1fb-2f88-484b-8b0c-fa9f7143b0d6" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/shop/controller/gin/shop.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shop/model/mysql/shop.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/29648f55-2616-4478-ad66-8aa8655aa23b.xml" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/schedule/model/mysql/schedule.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop/main.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/schedule/controller/gin/banner.go" beforeDir="false" afterPath="$PROJECT_DIR$/schedule/controller/gin/schedule.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schedule/model/mysql/banner.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop/model/mysql/shop.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop/model/mysql/shop.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

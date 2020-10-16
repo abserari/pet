@@ -14,11 +14,10 @@ import (
 
 type Shop struct {
 	ShopID     int
-	Name      string
-	ImagePath string
-	EventPath string
-	StartDate string
-	EndDate   string
+	ShopName   string
+	Address    string
+	Like       bool
+	Time       time.Time
 }
 
 const (
@@ -81,12 +80,11 @@ func LisitValidShopByUnixDate(db *sql.DB, tableName string, unixtime int64) ([]*
 	var (
 		bans []*Shop
 
-		bannerID  int
-		name      string
-		imagePath string
-		eventPath string
-		startDate string
-		endDate   string
+		shopID  int
+		shopname      string
+		address string
+		like bool
+		time time.Time
 	)
 
 	sql := fmt.Sprintf(bannerSQLString[mysqlShopLisitValidShop], tableName)
@@ -97,17 +95,16 @@ func LisitValidShopByUnixDate(db *sql.DB, tableName string, unixtime int64) ([]*
 	defer rows.Close()
 
 	for rows.Next() {
-		if err := rows.Scan(&bannerID, &name, &imagePath, &eventPath, &startDate, &endDate); err != nil {
+		if err := rows.Scan(&shopID, &shopname, &address, &like, &time); err != nil {
 			return nil, err
 		}
 
 		ban := &Shop{
-			ShopID:     bannerID,
-			Name:      name,
-			ImagePath: imagePath,
-			EventPath: eventPath,
-			StartDate: startDate,
-			EndDate:   endDate,
+			ShopID:     shopID,
+			ShopName:      shopname,
+			Address:    address,
+			Like:   like,
+			Time:       time,
 		}
 
 		bans = append(bans, ban)
@@ -128,7 +125,7 @@ func InfoByID(db *sql.DB, tableName string, id int) (*Shop, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		if err := rows.Scan(&ban.ShopID, &ban.Name, &ban.ImagePath, &ban.EventPath, &ban.StartDate, &ban.EndDate); err != nil {
+		if err := rows.Scan(&ban.ShopID, &ban.ShopName, &ban.Address, &ban.Like, &ban.Time); err != nil {
 			return nil, err
 		}
 	}
