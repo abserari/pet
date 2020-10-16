@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="ba2af1fb-2f88-484b-8b0c-fa9f7143b0d6" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/schedule/model/mysql/schedule.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schedule/controller/gin/banner.go" beforeDir="false" afterPath="$PROJECT_DIR$/schedule/controller/gin/schedule.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schedule/model/mysql/banner.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop/model/mysql/shop.go" beforeDir="false" afterPath="$PROJECT_DIR$/shop/model/mysql/shop.go" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Go File" />
+      </list>
+    </option>
+  </component>
+  <component name="GOROOT" path="/usr/local/go" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitToolBoxStore">
+    <option name="projectConfigVersion" value="2" />
+  </component>
+  <component name="GoLibraries">
+    <option name="indexEntireGoPath" value="false" />
+  </component>
+  <component name="ProjectId" id="1iSiv876j2uydd6PWdW4xwrrbyr" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="DatabaseDriversLRU" value="mysql" />
+    <property name="DefaultGoTemplateProperty" value="Go File" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="go.import.settings.migrated" value="true" />
+    <property name="go.sdk.automatically.set" value="true" />
+    <property name="go.tried.to.enable.integration.vgo.integrator" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\gopath\src\github.com\abserari\pet\util\sms\example" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="Go Build.go build github.com/abserari/pet/main">
+    <configuration name="go build github.com/abserari/pet/main" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="pet" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <filePath value="$PROJECT_DIR$/main/main.go" />
+      <package value="github.com/abserari/pet/main" />
+      <directory value="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="go build github.com/abserari/pet/util/sms/example" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="pet" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <filePath value="$PROJECT_DIR$/util/sms/example/example.go" />
+      <package value="github.com/abserari/pet/util/sms/example" />
+      <directory value="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Go Build.go build github.com/abserari/pet/main" />
+        <item itemvalue="Go Build.go build github.com/abserari/pet/util/sms/example" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" BundledDictionaries="0" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" Dictionaries="0" CorrectionsLimit="5" DefaultDictionary="application-level" UseSingleDictionary="true" />
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VgoProject">
+    <integration-enabled>true</integration-enabled>
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="2512" y="265" key="#Go_Modules" timestamp="1601907673596">
+      <screen x="1982" y="0" width="1474" height="864" />
+    </state>
+    <state x="2512" y="265" key="#Go_Modules/87.0.1833.1080/1982.0.1474.864@1982.0.1474.864" timestamp="1601907673596" />
+    <state x="2312" y="90" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1602084539865">
+      <screen x="1982" y="0" width="1474" height="864" />
+    </state>
+    <state x="2312" y="90" key="#com.intellij.execution.impl.EditConfigurationsDialog/87.0.1833.1080/1982.0.1474.864@1982.0.1474.864" timestamp="1602084539865" />
+    <state width="1431" height="224" key="GridCell.Tab.0.bottom" timestamp="1602140968767">
+      <screen x="1982" y="0" width="1474" height="864" />
+    </state>
+    <state width="1431" height="224" key="GridCell.Tab.0.bottom/87.0.1833.1080/1982.0.1474.864@1982.0.1474.864" timestamp="1602140968767" />
+    <state width="1431" height="224" key="GridCell.Tab.0.center" timestamp="1602140968767">
+      <screen x="1982" y="0" width="1474" height="864" />
+    </state>
+    <state width="1431" height="224" key="GridCell.Tab.0.center/87.0.1833.1080/1982.0.1474.864@1982.0.1474.864" timestamp="1602140968767" />
+    <state width="1431" height="224" key="GridCell.Tab.0.left" timestamp="1602140968767">
+      <screen x="1982" y="0" width="1474" height="864" />
+    </state>
+    <state width="1431" height="224" key="GridCell.Tab.0.left/87.0.1833.1080/1982.0.1474.864@1982.0.1474.864" timestamp="1602140968767" />
+    <state width="1431" height="224" key="GridCell.Tab.0.right" timestamp="1602140968767">
+      <screen x="1982" y="0" width="1474" height="864" />
+    </state>
+    <state width="1431" height="224" key="GridCell.Tab.0.right/87.0.1833.1080/1982.0.1474.864@1982.0.1474.864" timestamp="1602140968767" />
+    <state x="2221" y="76" key="SettingsEditor" timestamp="1601907963824">
+      <screen x="1982" y="0" width="1474" height="864" />
+    </state>
+    <state x="2221" y="76" key="SettingsEditor/87.0.1833.1080/1982.0.1474.864@1982.0.1474.864" timestamp="1601907963824" />
+    <state x="2419" y="164" width="600" height="536" key="find.popup" timestamp="1602141146345">
+      <screen x="1982" y="0" width="1474" height="864" />
+    </state>
+    <state x="2419" y="164" width="600" height="536" key="find.popup/87.0.1833.1080/1982.0.1474.864@1982.0.1474.864" timestamp="1602141146345" />
+  </component>
+</project>

@@ -1,33 +1,31 @@
 /*
  * Revision History:
- *     Initial: 2020/1018       Abserari
+ *     Initial: 2020/10/15      oiar
  */
 
 package mysql
 
 import (
-	"database/sql"
-	"errors"
-	"fmt"
-	"time"
+"database/sql"
+"errors"
+"fmt"
+"time"
 )
 
-// Banner -
-type Banner struct {
-	BannerID  int
-	Name      string
-	ImagePath string
-	EventPath string
-	StartDate string
-	EndDate   string
+type Shop struct {
+	ShopID     int
+	ShopName   string
+	Address    string
+	Like       bool
+	Time       time.Time
 }
 
 const (
-	mysqlBannerCreateTable = iota
-	mysqlBannerInsert
-	mysqlBannerLisitValidBanner
-	mysqlBannerInfoByID
-	mysqlBannerDeleteByID
+	mysqlShopCreateTable = iota
+	mysqlShopInsert
+	mysqlShopLisitValidShop
+	mysqlShopInfoByID
+	mysqlShopDeleteByID
 )
 
 var (
@@ -52,14 +50,14 @@ var (
 
 // CreateTable -
 func CreateTable(db *sql.DB, tableName string) error {
-	sql := fmt.Sprintf(bannerSQLString[mysqlBannerCreateTable], tableName)
+	sql := fmt.Sprintf(bannerSQLString[mysqlShopCreateTable], tableName)
 	_, err := db.Exec(sql)
 	return err
 }
 
-// InsertBanner return  id
-func InsertBanner(db *sql.DB, tableName string, name string, imagePath string, eventPath string, startDate time.Time, endDate time.Time) (int, error) {
-	sql := fmt.Sprintf(bannerSQLString[mysqlBannerInsert], tableName)
+// InsertShop return  id
+func InsertShop(db *sql.DB, tableName string, name string, imagePath string, eventPath string, startDate time.Time, endDate time.Time) (int, error) {
+	sql := fmt.Sprintf(bannerSQLString[mysqlShopInsert], tableName)
 	result, err := db.Exec(sql, name, imagePath, eventPath, startDate, endDate)
 	if err != nil {
 		return 0, err
@@ -77,20 +75,19 @@ func InsertBanner(db *sql.DB, tableName string, name string, imagePath string, e
 	return int(bannerID), nil
 }
 
-// LisitValidBannerByUnixDate return schedule list which have valid date
-func LisitValidBannerByUnixDate(db *sql.DB, tableName string, unixtime int64) ([]*Banner, error) {
+// LisitValidShopByUnixDate return schedule list which have valid date
+func LisitValidShopByUnixDate(db *sql.DB, tableName string, unixtime int64) ([]*Shop, error) {
 	var (
-		bans []*Banner
+		bans []*Shop
 
-		bannerID  int
-		name      string
-		imagePath string
-		eventPath string
-		startDate string
-		endDate   string
+		shopID  int
+		shopname      string
+		address string
+		like bool
+		time time.Time
 	)
 
-	sql := fmt.Sprintf(bannerSQLString[mysqlBannerLisitValidBanner], tableName)
+	sql := fmt.Sprintf(bannerSQLString[mysqlShopLisitValidShop], tableName)
 	rows, err := db.Query(sql, unixtime, unixtime)
 	if err != nil {
 		return nil, err
@@ -98,17 +95,16 @@ func LisitValidBannerByUnixDate(db *sql.DB, tableName string, unixtime int64) ([
 	defer rows.Close()
 
 	for rows.Next() {
-		if err := rows.Scan(&bannerID, &name, &imagePath, &eventPath, &startDate, &endDate); err != nil {
+		if err := rows.Scan(&shopID, &shopname, &address, &like, &time); err != nil {
 			return nil, err
 		}
 
-		ban := &Banner{
-			BannerID:  bannerID,
-			Name:      name,
-			ImagePath: imagePath,
-			EventPath: eventPath,
-			StartDate: startDate,
-			EndDate:   endDate,
+		ban := &Shop{
+			ShopID:     shopID,
+			ShopName:      shopname,
+			Address:    address,
+			Like:   like,
+			Time:       time,
 		}
 
 		bans = append(bans, ban)
@@ -118,10 +114,10 @@ func LisitValidBannerByUnixDate(db *sql.DB, tableName string, unixtime int64) ([
 }
 
 // InfoByID squery by id
-func InfoByID(db *sql.DB, tableName string, id int) (*Banner, error) {
-	var ban Banner
+func InfoByID(db *sql.DB, tableName string, id int) (*Shop, error) {
+	var ban Shop
 
-	sql := fmt.Sprintf(bannerSQLString[mysqlBannerInfoByID], tableName)
+	sql := fmt.Sprintf(bannerSQLString[mysqlShopInfoByID], tableName)
 	rows, err := db.Query(sql, id)
 	if err != nil {
 		return nil, err
@@ -129,7 +125,7 @@ func InfoByID(db *sql.DB, tableName string, id int) (*Banner, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		if err := rows.Scan(&ban.BannerID, &ban.Name, &ban.ImagePath, &ban.EventPath, &ban.StartDate, &ban.EndDate); err != nil {
+		if err := rows.Scan(&ban.ShopID, &ban.ShopName, &ban.Address, &ban.Like, &ban.Time); err != nil {
 			return nil, err
 		}
 	}
@@ -139,7 +135,7 @@ func InfoByID(db *sql.DB, tableName string, id int) (*Banner, error) {
 
 // DeleteByID delete by id
 func DeleteByID(db *sql.DB, tableName string, id int) error {
-	sql := fmt.Sprintf(bannerSQLString[mysqlBannerDeleteByID], tableName)
+	sql := fmt.Sprintf(bannerSQLString[mysqlShopDeleteByID], tableName)
 	_, err := db.Exec(sql, id)
 	return err
 }
