@@ -22,11 +22,11 @@ var (
 // Controller external service interface
 type Controller struct {
 	db        *sql.DB
-	getIDFunc func(c *gin.Context) (uint32, error)
+	getIDFunc func(c *gin.Context) (uint64, error)
 }
 
 // New create an external service interface
-func New(db *sql.DB, getID func(c *gin.Context) (uint32, error)) *Controller {
+func New(db *sql.DB, getID func(c *gin.Context) (uint64, error)) *Controller {
 	return &Controller{
 		db:        db,
 		getIDFunc: getID,
@@ -323,7 +323,7 @@ func (c *Controller) removeRelation(ctx *gin.Context) {
 func (c *Controller) adminGetRoleMap(ctx *gin.Context) {
 	var (
 		relation struct {
-			AdminID uint32 `json:"admin_id" binding:"required"`
+			AdminID uint64 `json:"admin_id" binding:"required"`
 		}
 	)
 

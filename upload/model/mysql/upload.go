@@ -45,7 +45,7 @@ func CreateTable(db *sql.DB) error {
 }
 
 // Insert insert a file
-func Insert(db *sql.DB, userID uint32, path, md5 string) error {
+func Insert(db *sql.DB, userID uint64, path, md5 string) error {
 	result, err := db.Exec(sqlString[mysqlFileInsert], userID, md5, path, time.Now())
 	if err != nil {
 		return err

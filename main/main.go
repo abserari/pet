@@ -7,10 +7,11 @@ import (
 
 	admin "github.com/abserari/pet/admin/controller"
 	permission "github.com/abserari/pet/permission/controller/gin"
+	pet "github.com/abserari/pet/pet/controller/gin"
+	schedule "github.com/abserari/pet/schedule/controller/gin"
 	smservice "github.com/abserari/pet/smservice/controller/gin"
 	service "github.com/abserari/pet/smservice/service"
 	upload "github.com/abserari/pet/upload/controller/gin"
-	pet "github.com/abserari/pet/pet/controller/gin"
 	"github.com/abserari/pet/upload/fileserver"
 
 	"github.com/gin-gonic/gin"
@@ -61,6 +62,9 @@ func main() {
 
 	uploadCon := upload.New(dbConn, "0.0.0.0:9573", adminCon.GetID)
 	uploadCon.RegisterRouter(router.Group("/api/v1/user"))
+
+	scheduleCon := schedule.New(dbConn, "schedule",adminCon.GetID)
+	scheduleCon.RegisterRouter(router.Group("/api/v1/schedule"))
 
 	go fileserver.StartFileServer("0.0.0.0:9573", "")
 	log.Fatal(router.Run(":8000"))
