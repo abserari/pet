@@ -12,7 +12,7 @@ import (
 	smservice "github.com/abserari/pet/smservice/controller/gin"
 	service "github.com/abserari/pet/smservice/service"
 	upload "github.com/abserari/pet/upload/controller/gin"
-	"github.com/abserari/pet/upload/fileserver"
+	"github.com/abserari/pet/utils/fileserver"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"

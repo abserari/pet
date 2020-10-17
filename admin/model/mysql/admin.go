@@ -11,7 +11,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/abserari/pet/util/salt"
+	"github.com/abserari/pet/utils/salt"
 )
 
 const (

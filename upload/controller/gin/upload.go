@@ -16,7 +16,7 @@ import (
 	"strings"
 
 	mysql "github.com/abserari/pet/upload/model/mysql"
-	md "github.com/abserari/pet/util/file"
+	md "github.com/abserari/pet/utils/file"
 	"github.com/gin-gonic/gin"
 )
 
