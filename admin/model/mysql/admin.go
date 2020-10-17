@@ -196,7 +196,7 @@ func ModifyAdminActive(db *sql.DB, id uint32, active bool) error {
 }
 
 //IsActive return user.Active and nil if query success.
-func IsActive(db *sql.DB, id uint32) (bool, error) {
+func IsActive(db *sql.DB, id uint64) (bool, error) {
 	var (
 		isActive bool
 	)

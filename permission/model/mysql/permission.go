@@ -317,7 +317,7 @@ func RemoveRelation(db *sql.DB, aid, rid uint32) error {
 }
 
 // AdminGetRoleMap list all the roles of the specified admin and the return form is map.
-func AdminGetRoleMap(db *sql.DB, aid uint32) (map[uint32]bool, error) {
+func AdminGetRoleMap(db *sql.DB, aid uint64) (map[uint32]bool, error) {
 	var (
 		roleID uint32
 		result = make(map[uint32]bool)

@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func (con *Controller) GetID(ctx *gin.Context) (uint32, error) {
+func (con *Controller) GetID(ctx *gin.Context) (uint64, error) {
 	id, ok := ctx.Get("userID")
 	if !ok {
 		return 0, errUserIDNotExists
@@ -20,7 +20,7 @@ func (con *Controller) GetID(ctx *gin.Context) (uint32, error) {
 		return 0, errUserIDNotValid(id)
 	}
 
-	return uint32(v), nil
+	return uint64(v), nil
 }
 
 //CheckActive middleware that checks the active
