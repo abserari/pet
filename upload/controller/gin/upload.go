@@ -44,11 +44,11 @@ const (
 type UploadController struct {
 	db      *sql.DB
 	BaseURL string
-	getUID  func(c *gin.Context) (uint32, error)
+	getUID  func(c *gin.Context) (uint64, error)
 }
 
 // New -
-func New(db *sql.DB, baseURL string, getUID func(c *gin.Context) (uint32, error)) *UploadController {
+func New(db *sql.DB, baseURL string, getUID func(c *gin.Context) (uint64, error)) *UploadController {
 	return &UploadController{
 		db:      db,
 		BaseURL: "http://" + baseURL + "/",

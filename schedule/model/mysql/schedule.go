@@ -35,14 +35,15 @@ var (
 		`CREATE TABLE IF NOT EXISTS %s (
 			scheduleId  BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
 			adminId     BIGINT UNSIGNED NOT NULL,
-			date        VARCHAR(512) UNIQUE DEFAULT NULL,
-			time 		VARCHAR(512) UNIQUE DEFAULT NULL,
-			note        VARCHAR(512) UNIQUE DEFAULT NULL,
+			date        VARCHAR(512),
+			time 		VARCHAR(512),
+			note        VARCHAR(512),
 			PRIMARY KEY (scheduleId),
 			KEY (adminId)
 		)ENGINE=InnoDB AUTO_INCREMENT=1000000 DEFAULT CHARSET=utf8mb4`,
-		`INSERT INTO %s (adminId, date,time,note) VALUES (?,?,?,?)`,
+		`INSERT INTO %s (adminId,date,time,note) VALUES (?,?,?,?)`,
 		`SELECT * FROM %s WHERE adminId = ? LOCK IN SHARE MODE`,
+		`SELECT * FROM %s WHERE scheduleId = ? LIMIT 1 LOCK IN SHARE MODE`,
 		`DELETE FROM %s WHERE scheduleId = ? LIMIT 1`,
 	}
 )
@@ -74,7 +75,7 @@ func InsertSchedule(db *sql.DB, tableName string, adminId uint64, date string, t
 	return int(scheduleID), nil
 }
 
-// ListValidScheduleByAdminID return schedule list which have valid date
+// ListValidScheduleByAdminID return schedule list
 func ListValidScheduleByAdminID(db *sql.DB, tableName string, adminId uint64) ([]*Schedule, error) {
 	var (
 		bans []*Schedule
