@@ -41,13 +41,17 @@ func (b *PetController) RegisterRouter(r gin.IRouter) {
 	}
 
 	r.POST("/create", b.create)
+
 	r.POST("/update/name", b.modifyName)
 	r.POST("/update/category", b.modifyCategory)
 	r.POST("/update/avatar", b.modifyAvatar)
 	r.POST("/update/birthday", b.modifyBirthday)
 	r.POST("/update/medicalcurrent", b.modifyMedicalCurrent)
 	r.POST("/update/hobbies", b.modifyHobbies)
+	r.POST("/update/gender", b.modifyGender)
+
 	r.POST("/delete", b.deleteByID)
+
 	r.POST("/info/id", b.infoByID)
 	r.POST("/list/adminid", b.listPetByAdminID)
 }
@@ -62,6 +66,7 @@ func (b *PetController) create(c *gin.Context) {
 			Birthday       time.Time `json:"birthday" `
 			MedicalCurrent string    `json:"medicalCurrent" `
 			Hobbies        string    `json:"hobbies" `
+			Gender         string    `json:"gender" `
 		}
 	)
 
@@ -72,7 +77,7 @@ func (b *PetController) create(c *gin.Context) {
 		return
 	}
 
-	id, err := mysql.InsertPet(b.db, b.tableName, req.AdminID, req.Name, req.Category, req.Avatar, req.Birthday, req.MedicalCurrent, req.Hobbies)
+	id, err := mysql.InsertPet(b.db, b.tableName, req.AdminID, req.Name, req.Category, req.Avatar, req.Birthday, req.MedicalCurrent, req.Hobbies, req.Gender)
 	if err != nil {
 		c.Error(err)
 		c.JSON(http.StatusBadGateway, gin.H{"status": http.StatusBadGateway})
@@ -274,7 +279,30 @@ func (con *PetController) modifyHobbies(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, gin.H{"status": http.StatusOK})
 }
+func (con *PetController) modifyGender(ctx *gin.Context) {
+	var (
+		admin struct {
+			PetID  uint64 `json:"petID"    binding:"required"`
+			Gender string `json:"gender"     binding:"required,email"`
+		}
+	)
 
+	err := ctx.ShouldBind(&admin)
+	if err != nil {
+		ctx.Error(err)
+		ctx.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest})
+		return
+	}
+
+	err = mysql.ModifyGender(con.db, admin.PetID, admin.Gender)
+	if err != nil {
+		ctx.Error(err)
+		ctx.JSON(http.StatusBadGateway, gin.H{"status": http.StatusBadGateway})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"status": http.StatusOK})
+}
 func (b *PetController) deleteByID(c *gin.Context) {
 	var (
 		req struct {
