@@ -6,59 +6,59 @@
 package mysql
 
 import (
-"database/sql"
-"errors"
-"fmt"
-"time"
+	"database/sql"
+	"errors"
+	"fmt"
 )
 
 type Shop struct {
-	ShopID     int
+	ShopID     uint64
 	ShopName   string
 	Address    string
+	Cover      string
+	Article    string
 	Like       bool
-	Time       time.Time
 }
 
 const (
 	mysqlShopCreateTable = iota
 	mysqlShopInsert
-	mysqlShopLisitValidShop
+	mysqlShopList
 	mysqlShopInfoByID
 	mysqlShopDeleteByID
 )
 
 var (
-	errInvalidInsert = errors.New("insert schedule:insert affected 0 rows")
+	errInvalidInsert = errors.New("insert shop:insert affected 0 rows")
 
-	bannerSQLString = []string{
+	shopSQLString = []string{
 		`CREATE TABLE IF NOT EXISTS %s (
-			bannerId    INT NOT NULL AUTO_INCREMENT,
-			name        VARCHAR(512) UNIQUE DEFAULT NULL,
-			imagePath   VARCHAR(512) DEFAULT NULL,
-			eventPath   VARCHAR(512) DEFAULT NULL,
-			startDate   DATETIME NOT NULL,
-			endDate     DATETIME NOT NULL,
-			PRIMARY KEY (bannerId)
+			shopId      BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+			shopName    VARCHAR(512) UNIQUE DEFAULT NULL DEFAULT ' ',
+			address		VARCHAR(512) NOT NULL DEFAULT ' ',
+			cover       VARCHAR(512) NOT NULL DEFAULT ' ',
+			article     VARCHAR(512) NOT NULL DEFAULT ' ',
+			like		BOOLEAN NOT NULL DEFAULT FALSE,
+			PRIMARY KEY (shopId)
 		)ENGINE=InnoDB AUTO_INCREMENT=1000000 DEFAULT CHARSET=utf8mb4`,
-		`INSERT INTO  %s (name,imagePath,eventPath,startDate,endDate) VALUES (?,?,?,?,?)`,
-		`SELECT * FROM %s WHERE unix_timestamp(startDate) <= ? AND unix_timestamp(endDate) >= ? LOCK IN SHARE MODE`,
-		`SELECT * FROM %s WHERE bannerid = ? LIMIT 1 LOCK IN SHARE MODE`,
-		`DELETE FROM %s WHERE bannerid = ? LIMIT 1`,
+		`INSERT INTO %s (shopName,address,cover,article,like) VALUES (?,?,?,?,?)`,
+		`SELECT * FROM %s`,
+		`SELECT * FROM %s WHERE shopId = ? LIMIT 1 LOCK IN SHARE MODE`,
+		`DELETE FROM %s WHERE shopId = ? LIMIT 1`,
 	}
 )
 
 // CreateTable -
 func CreateTable(db *sql.DB, tableName string) error {
-	sql := fmt.Sprintf(bannerSQLString[mysqlShopCreateTable], tableName)
-	_, err := db.Exec(sql)
+	s := fmt.Sprintf(shopSQLString[mysqlShopCreateTable], tableName)
+	_, err := db.Exec(s)
 	return err
 }
 
-// InsertShop return  id
-func InsertShop(db *sql.DB, tableName string, name string, imagePath string, eventPath string, startDate time.Time, endDate time.Time) (int, error) {
-	sql := fmt.Sprintf(bannerSQLString[mysqlShopInsert], tableName)
-	result, err := db.Exec(sql, name, imagePath, eventPath, startDate, endDate)
+// InsertShop return id
+func InsertShop(db *sql.DB, tableName, shopName, address, cover, article string, like bool) (int, error) {
+	s := fmt.Sprintf(shopSQLString[mysqlShopInsert], tableName)
+	result, err := db.Exec(s, shopName, address, cover, article, like)
 	if err != nil {
 		return 0, err
 	}
@@ -67,75 +67,77 @@ func InsertShop(db *sql.DB, tableName string, name string, imagePath string, eve
 		return 0, errInvalidInsert
 	}
 
-	bannerID, err := result.LastInsertId()
+	shopID, err := result.LastInsertId()
 	if err != nil {
 		return 0, err
 	}
 
-	return int(bannerID), nil
+	return int(shopID), nil
 }
 
-// LisitValidShopByUnixDate return schedule list which have valid date
-func LisitValidShopByUnixDate(db *sql.DB, tableName string, unixtime int64) ([]*Shop, error) {
+// listShop return shop list
+func ListShop(db *sql.DB, tableName string) ([]*Shop, error) {
 	var (
-		bans []*Shop
+		shops []*Shop
 
-		shopID  int
-		shopname      string
-		address string
-		like bool
-		time time.Time
+		shopID   uint64
+		shopName string
+		address  string
+		cover    string
+		article  string
+		like     bool
 	)
 
-	sql := fmt.Sprintf(bannerSQLString[mysqlShopLisitValidShop], tableName)
-	rows, err := db.Query(sql, unixtime, unixtime)
+	s := fmt.Sprintf(shopSQLString[mysqlShopList], tableName)
+	rows, err := db.Query(s)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
 	for rows.Next() {
-		if err := rows.Scan(&shopID, &shopname, &address, &like, &time); err != nil {
+		if err := rows.Scan(&shopID, &shopName, &address, &cover, &article, &like); err != nil {
 			return nil, err
 		}
 
-		ban := &Shop{
-			ShopID:     shopID,
-			ShopName:      shopname,
-			Address:    address,
-			Like:   like,
-			Time:       time,
+		shop := &Shop{
+			ShopID:   shopID,
+			ShopName: shopName,
+			Address:  address,
+			Cover:    cover,
+			Article:  article,
+			Like:     like,
 		}
 
-		bans = append(bans, ban)
+		shops = append(shops, shop)
 	}
 
-	return bans, nil
+	return shops, nil
 }
 
-// InfoByID squery by id
-func InfoByID(db *sql.DB, tableName string, id int) (*Shop, error) {
-	var ban Shop
+// InfoByID query by id
+func InfoByID(db *sql.DB, tableName string, shopId uint64) (*Shop, error) {
+	var shop Shop
 
-	sql := fmt.Sprintf(bannerSQLString[mysqlShopInfoByID], tableName)
-	rows, err := db.Query(sql, id)
+	s := fmt.Sprintf(shopSQLString[mysqlShopInfoByID], tableName)
+	rows, err := db.Query(s, shopId)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
 	for rows.Next() {
-		if err := rows.Scan(&ban.ShopID, &ban.ShopName, &ban.Address, &ban.Like, &ban.Time); err != nil {
+		if err := rows.Scan(&shop.ShopID, &shop.ShopName, &shop.Address, &shop.Cover, &shop.Article, &shop.Like); err != nil {
 			return nil, err
 		}
 	}
 
-	return &ban, nil
+	return &shop, nil
 }
 
 // DeleteByID delete by id
-func DeleteByID(db *sql.DB, tableName string, id int) error {
-	sql := fmt.Sprintf(bannerSQLString[mysqlShopDeleteByID], tableName)
-	_, err := db.Exec(sql, id)
+func DeleteByID(db *sql.DB, tableName string, shopId int) error {
+	s := fmt.Sprintf(shopSQLString[mysqlShopDeleteByID], tableName)
+	_, err := db.Exec(s, shopId)
 	return err
 }
