@@ -9,6 +9,7 @@ import (
 	permission "github.com/abserari/pet/permission/controller/gin"
 	pet "github.com/abserari/pet/pet/controller/gin"
 	schedule "github.com/abserari/pet/schedule/controller/gin"
+	shop "github.com/abserari/pet/shop/controller/gin"
 	smservice "github.com/abserari/pet/smservice/controller/gin"
 	service "github.com/abserari/pet/smservice/service"
 	upload "github.com/abserari/pet/upload/controller/gin"
@@ -65,6 +66,9 @@ func main() {
 
 	scheduleCon := schedule.New(dbConn, "schedule",adminCon.GetID)
 	scheduleCon.RegisterRouter(router.Group("/api/v1/schedule"))
+
+	shopCon := shop.New(dbConn, "shop")
+	shopCon.RegisterRouter(router.Group("/api/v1/shop"))
 
 	go fileserver.StartFileServer("0.0.0.0:9573", "")
 	log.Fatal(router.Run(":8000"))

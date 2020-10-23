@@ -7,30 +7,28 @@ package controller
 
 import (
 	"database/sql"
+	"github.com/abserari/pet/shop/model/mysql"
+	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
-	"time"
-
-	mysql "github.com/abserari/pet/schedule/model/mysql"
-	"github.com/gin-gonic/gin"
 )
 
-// BannerController -
-type BannerController struct {
+// ShopController -
+type ShopController struct {
 	db        *sql.DB
 	tableName string
 }
 
 // New -
-func New(db *sql.DB, tableName string) *BannerController {
-	return &BannerController{
+func New(db *sql.DB, tableName string) *ShopController {
+	return &ShopController{
 		db:        db,
 		tableName: tableName,
 	}
 }
 
 // RegisterRouter -
-func (b *BannerController) RegisterRouter(r gin.IRouter) {
+func (b *ShopController) RegisterRouter(r gin.IRouter) {
 	if r == nil {
 		log.Fatal("[InitRouter]: server is nil")
 	}
@@ -43,17 +41,17 @@ func (b *BannerController) RegisterRouter(r gin.IRouter) {
 	r.POST("/create", b.create)
 	r.POST("/delete", b.deleteByID)
 	r.POST("/info/id", b.infoByID)
-	r.POST("/list/date", b.lisitValidBannerByUnixDate)
+	r.POST("/list/adminId", b.listShopByAdminID)
 }
 
-func (b *BannerController) create(c *gin.Context) {
+func (b *ShopController) create(c *gin.Context) {
 	var (
 		req struct {
-			Name      string    `json:"name"      binding:"required"`
-			ImagePath string    `json:"imageurl"  binding:"required"`
-			EventPath string    `json:"eventurl"  binding:"required"`
-			StartDate time.Time `json:"start_date"`
-			EndDate   time.Time `json:"end_date"`
+			ShopName  string    `json:"shopName"      binding:"required"`
+			Address   string    `json:"address"       binding:"required"`
+			Cover 	  string    `json:"cover"         binding:"required"`
+			Article   string    `json:"article"       binding:"required"`
+			Like      bool      `json:"like"          binding:"required"`
 		}
 	)
 
@@ -64,7 +62,7 @@ func (b *BannerController) create(c *gin.Context) {
 		return
 	}
 
-	id, err := mysql.InsertBanner(b.db, b.tableName, req.Name, req.ImagePath, req.EventPath, req.StartDate, req.EndDate)
+	id, err := mysql.InsertShop(b.db, b.tableName, req.ShopName, req.Address, req.Cover, req.Article, req.Like)
 	if err != nil {
 		c.Error(err)
 		c.JSON(http.StatusBadGateway, gin.H{"status": http.StatusBadGateway})
@@ -74,10 +72,10 @@ func (b *BannerController) create(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "ID": id})
 }
 
-func (b *BannerController) lisitValidBannerByUnixDate(c *gin.Context) {
+func (b *ShopController) listShopByAdminID(c *gin.Context) {
 	var (
 		req struct {
-			Unixtime int64 `json:"unixtime"    binding:"required"`
+			ShopID uint64 `json:"shopId"    binding:"required"`
 		}
 	)
 
@@ -88,20 +86,20 @@ func (b *BannerController) lisitValidBannerByUnixDate(c *gin.Context) {
 		return
 	}
 
-	banners, err := mysql.LisitValidBannerByUnixDate(b.db, b.tableName, req.Unixtime)
+	Shops, err := mysql.ListShop(b.db, b.tableName)
 	if err != nil {
 		c.Error(err)
 		c.JSON(http.StatusBadGateway, gin.H{"status": http.StatusBadGateway})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "banners": banners})
+	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "Shops": Shops})
 }
 
-func (b *BannerController) infoByID(c *gin.Context) {
+func (b *ShopController) infoByID(c *gin.Context) {
 	var (
 		req struct {
-			ID int `json:"id"     binding:"required"`
+			ShopID uint64 `json:"shopId"     binding:"required"`
 		}
 	)
 
@@ -112,20 +110,20 @@ func (b *BannerController) infoByID(c *gin.Context) {
 		return
 	}
 
-	ban, err := mysql.InfoByID(b.db, b.tableName, req.ID)
+	shop, err := mysql.InfoByID(b.db, b.tableName, req.ShopID)
 	if err != nil {
 		c.Error(err)
 		c.JSON(http.StatusBadGateway, gin.H{"status": http.StatusBadGateway})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "ban": ban})
+	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "ban": shop})
 }
 
-func (b *BannerController) deleteByID(c *gin.Context) {
+func (b *ShopController) deleteByID(c *gin.Context) {
 	var (
 		req struct {
-			ID int `json:"id"    binding:"required"`
+			ShopID int `json:"shopId"    binding:"required"`
 		}
 	)
 
@@ -136,7 +134,7 @@ func (b *BannerController) deleteByID(c *gin.Context) {
 		return
 	}
 
-	err = mysql.DeleteByID(b.db, b.tableName, req.ID)
+	err = mysql.DeleteByID(b.db, b.tableName, req.ShopID)
 	if err != nil {
 		c.Error(err)
 		c.JSON(http.StatusBadGateway, gin.H{"status": http.StatusBadGateway})

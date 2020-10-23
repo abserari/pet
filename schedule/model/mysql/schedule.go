@@ -50,15 +50,15 @@ var (
 
 // CreateTable -
 func CreateTable(db *sql.DB, tableName string) error {
-	sql := fmt.Sprintf(ScheduleSQLString[mysqlScheduleCreateTable], tableName)
-	_, err := db.Exec(sql)
+	s := fmt.Sprintf(ScheduleSQLString[mysqlScheduleCreateTable], tableName)
+	_, err := db.Exec(s)
 	return err
 }
 
 // InsertSchedule return id
 func InsertSchedule(db *sql.DB, tableName string, adminId uint64, date string, time string, note string) (int, error) {
-	sql := fmt.Sprintf(ScheduleSQLString[mysqlScheduleInsert], tableName)
-	result, err := db.Exec(sql, adminId, date, time, note)
+	s := fmt.Sprintf(ScheduleSQLString[mysqlScheduleInsert], tableName)
+	result, err := db.Exec(s, adminId, date, time, note)
 	if err != nil {
 		return 0, err
 	}
